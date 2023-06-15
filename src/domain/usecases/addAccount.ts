@@ -7,5 +7,5 @@ export interface AccountValues {
 }
 
 export interface AddAccount {
-  add: (account: AccountValues) => Account
+  add: (account: AccountValues) => Promise<Account>
 }
