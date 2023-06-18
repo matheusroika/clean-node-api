@@ -1,5 +1,5 @@
 import { MongoClient } from 'mongodb'
-import type { Collection } from 'mongodb'
+import type { Collection, WithId, Document } from 'mongodb'
 
 export const MongoHelper = {
   client: null as unknown as MongoClient,
@@ -11,5 +11,13 @@ export const MongoHelper = {
   },
   getCollection (name: string): Collection {
     return this.client.db().collection(name)
+  },
+  map (document: WithId<Document>): any {
+    const { _id, ...documentWithoutId } = document
+    const formattedDocument = {
+      id: _id,
+      ...documentWithoutId
+    }
+    return formattedDocument
   }
 }
