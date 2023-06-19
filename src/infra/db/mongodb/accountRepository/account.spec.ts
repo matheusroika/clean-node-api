@@ -1,9 +1,19 @@
+import type { Collection, Document } from 'mongodb'
 import { MongoHelper } from '../helpers/mongoHelper'
 import { AccountMongoRepository } from './account'
 
-const makeSut = (): AccountMongoRepository => {
+interface Sut {
+  sut: AccountMongoRepository
+  accountCollection: Collection<Document>
+}
+
+const makeSut = (): Sut => {
   const sut = new AccountMongoRepository()
-  return sut
+  const accountCollection = MongoHelper.getCollection('accounts')
+  return {
+    sut,
+    accountCollection
+  }
 }
 
 describe('Account MongoDB Repository', () => {
@@ -21,7 +31,7 @@ describe('Account MongoDB Repository', () => {
   })
 
   test('Should return an account on success', async () => {
-    const sut = makeSut()
+    const { sut } = makeSut()
     const account = await sut.add({
       name: 'Any Name',
       email: 'any@email.com',
@@ -32,5 +42,41 @@ describe('Account MongoDB Repository', () => {
     expect(account.name).toBe('Any Name')
     expect(account.email).toBe('any@email.com')
     expect(account.password).toBe('any_password')
+  })
+
+  test('Should throw if accountCollection.insertOne throws', async () => {
+    const { sut, accountCollection } = makeSut()
+    jest.spyOn(sut, 'getAccountCollection').mockReturnValue(accountCollection)
+    jest.spyOn(accountCollection, 'insertOne').mockImplementation(() => { throw new Error() })
+    const promise = sut.add({
+      name: 'Any Name',
+      email: 'any@email.com',
+      password: 'any_password'
+    })
+    await expect(promise).rejects.toThrow()
+  })
+
+  test('Should throw if accountCollection.findOne throws', async () => {
+    const { sut, accountCollection } = makeSut()
+    jest.spyOn(sut, 'getAccountCollection').mockReturnValue(accountCollection)
+    jest.spyOn(accountCollection, 'findOne').mockImplementation(() => { throw new Error() })
+    const promise = sut.add({
+      name: 'Any Name',
+      email: 'any@email.com',
+      password: 'any_password'
+    })
+    await expect(promise).rejects.toThrow()
+  })
+
+  test('Should throw if new account can\'t be found on DB', async () => {
+    const { sut, accountCollection } = makeSut()
+    jest.spyOn(sut, 'getAccountCollection').mockReturnValue(accountCollection)
+    jest.spyOn(accountCollection, 'findOne').mockResolvedValue(null)
+    const promise = sut.add({
+      name: 'Any Name',
+      email: 'any@email.com',
+      password: 'any_password'
+    })
+    await expect(promise).rejects.toThrow()
   })
 })
