@@ -45,10 +45,10 @@ const makeFakeServerError = (): HttpResponse => {
 }
 
 const makeFakeAccount = (): Account => ({
-  id: 'valid_id',
-  name: 'Valid Name',
-  email: 'valid@email.com',
-  password: 'valid_password'
+  id: 'any_id',
+  name: 'Any Name',
+  email: 'any@email.com',
+  password: 'any_password'
 })
 
 const makeFakeRequest = (): HttpRequest => ({
