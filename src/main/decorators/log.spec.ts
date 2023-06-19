@@ -1,5 +1,15 @@
+import type { LogErrorRepository } from '../../data/protocols/logErrorRepository'
+import { serverError } from '../../presentation/helpers/httpHelper'
 import type { Controller, HttpRequest, HttpResponse } from '../../presentation/protocols'
 import { LogControllerDecorator } from './log'
+
+const makeLogErrorRepository = (): LogErrorRepository => {
+  class LogErrorRepositoryStub implements LogErrorRepository {
+    async log (errorStack: string): Promise<void> {
+    }
+  }
+  return new LogErrorRepositoryStub()
+}
 
 const makeController = (): Controller => {
   class ControllerStub implements Controller {
@@ -17,14 +27,17 @@ const makeController = (): Controller => {
 interface Sut {
   sut: LogControllerDecorator
   controllerStub: Controller
+  logErrorRepositoryStub: LogErrorRepository
 }
 
 const makeSut = (): Sut => {
+  const logErrorRepositoryStub = makeLogErrorRepository()
   const controllerStub = makeController()
-  const sut = new LogControllerDecorator(controllerStub)
+  const sut = new LogControllerDecorator(controllerStub, logErrorRepositoryStub)
   return {
     sut,
-    controllerStub
+    controllerStub,
+    logErrorRepositoryStub
   }
 }
 
@@ -59,5 +72,24 @@ describe('Log Controller Decorator', () => {
       statusCode: 200,
       body: 'ok'
     })
+  })
+
+  test('Should call LogErrorRepository with correct error if controller return a ServerError', async () => {
+    const { sut, controllerStub, logErrorRepositoryStub } = makeSut()
+    const fakeError = new Error()
+    fakeError.stack = 'Any stack'
+    const error = serverError(fakeError)
+    const logSpy = jest.spyOn(logErrorRepositoryStub, 'log')
+    jest.spyOn(controllerStub, 'handle').mockReturnValueOnce(new Promise(resolve => { resolve(error) }))
+    const httpRequest = {
+      body: {
+        name: 'Any Name',
+        email: 'any@email.com',
+        password: 'any_password',
+        passwordConfirmation: 'any_password'
+      }
+    }
+    await sut.handle(httpRequest)
+    expect(logSpy).toHaveBeenCalledWith('Any stack')
   })
 })
