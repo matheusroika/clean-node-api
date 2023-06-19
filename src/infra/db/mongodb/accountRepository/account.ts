@@ -5,12 +5,12 @@ import type { AccountValues } from '../../../../domain/usecases/addAccount'
 import { MongoHelper } from '../helpers/mongoHelper'
 
 export class AccountMongoRepository implements AddAccountRepository {
-  getAccountCollection (): Collection {
-    return MongoHelper.getCollection('accounts')
+  async getAccountCollection (): Promise<Collection> {
+    return await MongoHelper.getCollection('accounts')
   }
 
   async add (account: AccountValues): Promise<Account> {
-    const accountCollection = this.getAccountCollection()
+    const accountCollection = await this.getAccountCollection()
     const document = await accountCollection.insertOne(account)
     const newAccount = await accountCollection.findOne({ _id: document.insertedId })
     if (!newAccount) throw new Error()
