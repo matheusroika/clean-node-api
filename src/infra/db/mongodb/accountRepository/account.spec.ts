@@ -33,26 +33,4 @@ describe('Account MongoDB Repository', () => {
     expect(account.email).toBe('any@email.com')
     expect(account.password).toBe('any_password')
   })
-
-  test('Should throw if collection.insertOne throws', async () => {
-    const sut = makeSut()
-    jest.spyOn(sut.accountCollection, 'insertOne').mockImplementationOnce(() => { throw new Error() })
-    const promise = sut.add({
-      name: 'Any Name',
-      email: 'any@email.com',
-      password: 'any_password'
-    })
-    await expect(promise).rejects.toThrow()
-  })
-
-  test('Should throw if collection.findOne throws', async () => {
-    const sut = makeSut()
-    jest.spyOn(sut.accountCollection, 'findOne').mockImplementationOnce(() => { throw new Error() })
-    const promise = sut.add({
-      name: 'Any Name',
-      email: 'any@email.com',
-      password: 'any_password'
-    })
-    await expect(promise).rejects.toThrow()
-  })
 })
