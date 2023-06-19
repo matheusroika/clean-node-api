@@ -1,10 +1,10 @@
-import type { Collection, Document } from 'mongodb'
+import type { Collection } from 'mongodb'
 import { MongoHelper } from '../helpers/mongoHelper'
 import { AccountMongoRepository } from './account'
 
 interface Sut {
   sut: AccountMongoRepository
-  accountCollection: Collection<Document>
+  accountCollection: Collection
 }
 
 const makeSut = (): Sut => {

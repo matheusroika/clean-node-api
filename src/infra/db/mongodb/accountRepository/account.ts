@@ -1,11 +1,11 @@
-import type { Collection, Document } from 'mongodb'
+import type { Collection } from 'mongodb'
 import type { AddAccountRepository } from '../../../../data/protocols/addAccountRepository'
 import type { Account } from '../../../../domain/models/account'
 import type { AccountValues } from '../../../../domain/usecases/addAccount'
 import { MongoHelper } from '../helpers/mongoHelper'
 
 export class AccountMongoRepository implements AddAccountRepository {
-  getAccountCollection (): Collection<Document> {
+  getAccountCollection (): Collection {
     return MongoHelper.getCollection('accounts')
   }
 
