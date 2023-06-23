@@ -49,7 +49,7 @@ const makeFakeAccount = (): Account => ({
   password: 'any_password'
 })
 
-describe('DbAddAccount Usecase', () => {
+describe('Db Add Account Use Case', () => {
   test('Should call Encrypter with correct password', async () => {
     const { sut, encrypterStub } = makeSut()
     const encryptSpy = jest.spyOn(encrypterStub, 'encrypt')
