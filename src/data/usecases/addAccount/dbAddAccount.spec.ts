@@ -59,7 +59,7 @@ describe('DbAddAccount Usecase', () => {
 
   test('Should throw if Encrypter throws', async () => {
     const { sut, encrypterStub } = makeSut()
-    jest.spyOn(encrypterStub, 'encrypt').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(encrypterStub, 'encrypt').mockImplementationOnce(async () => { throw new Error() })
     const promise = sut.add(makeFakeAccountData())
     await expect(promise).rejects.toThrow()
   })
@@ -73,7 +73,7 @@ describe('DbAddAccount Usecase', () => {
 
   test('Should throw if AddAccountRepository throws', async () => {
     const { sut, addAccountRepositoryStub } = makeSut()
-    jest.spyOn(addAccountRepositoryStub, 'add').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(addAccountRepositoryStub, 'add').mockImplementationOnce(async () => { throw new Error() })
     const promise = sut.add(makeFakeAccountData())
     await expect(promise).rejects.toThrow()
   })
