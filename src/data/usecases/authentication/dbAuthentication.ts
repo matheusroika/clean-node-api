@@ -18,8 +18,9 @@ export class DbAuthentication {
     const { email, password } = authValues
     const account = await this.loadAccountByEmailRepository.load(email)
     if (!account) return null
-    await this.hashComparer.compare(password, account.password)
-    await this.tokenGenerator.generate(account.id)
-    return null
+    const isValid = await this.hashComparer.compare(password, account.password)
+    if (!isValid) return null
+    const accessToken = await this.tokenGenerator.generate(account.id)
+    return accessToken
   }
 }
