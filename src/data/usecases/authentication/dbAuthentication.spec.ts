@@ -1,6 +1,6 @@
 import { DbAuthentication } from './dbAuthentication'
 import type { AuthValues } from '../../../domain/usecases/authentication'
-import type { LoadAccountByEmailRepository } from '../../protocols/loadAccountByEmailRepository'
+import type { LoadAccountByEmailRepository } from '../../protocols/db/loadAccountByEmailRepository'
 import type { Account } from '../addAccount/dbAddAccountProtocols'
 
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
