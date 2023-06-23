@@ -4,7 +4,7 @@ import type { Validation } from './validation'
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
     validate (input: any): Error | undefined {
-      return new Error()
+      return undefined
     }
   }
 
@@ -13,21 +13,30 @@ const makeValidation = (): Validation => {
 
 interface Sut {
   sut: ValidationComposite
-  validationStub: Validation
+  validationStubs: Validation[]
 }
 
 const makeSut = (): Sut => {
-  const validationStub = makeValidation()
-  const sut = new ValidationComposite([validationStub])
+  const validationStubs = [makeValidation(), makeValidation()]
+  const sut = new ValidationComposite(validationStubs)
   return {
     sut,
-    validationStub
+    validationStubs
   }
 }
 
 describe('Validation Composite', () => {
   test('Should return an error if any validation fails', () => {
-    const { sut } = makeSut()
+    const { sut, validationStubs } = makeSut()
+    jest.spyOn(validationStubs[0], 'validate').mockReturnValueOnce(new Error())
+    const error = sut.validate({ anyField: 'any' })
+    expect(error).toEqual(new Error())
+  })
+
+  test('Should return the first error if more than one validation fails', () => {
+    const { sut, validationStubs } = makeSut()
+    jest.spyOn(validationStubs[0], 'validate').mockReturnValueOnce(new Error())
+    jest.spyOn(validationStubs[1], 'validate').mockReturnValueOnce(new Error('second error'))
     const error = sut.validate({ anyField: 'any' })
     expect(error).toEqual(new Error())
   })
