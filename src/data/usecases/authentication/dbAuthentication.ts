@@ -20,7 +20,7 @@ export class DbAuthentication {
 
   async auth (authValues: AuthValues): Promise<string | null> {
     const { email, password } = authValues
-    const account = await this.loadAccountByEmailRepository.load(email)
+    const account = await this.loadAccountByEmailRepository.loadByEmail(email)
     if (!account) return null
     const { password: accountPassword, id } = account
     const isValid = await this.hashComparer.compare(password, accountPassword)
