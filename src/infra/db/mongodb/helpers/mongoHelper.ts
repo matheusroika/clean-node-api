@@ -1,4 +1,5 @@
 import { MongoClient } from 'mongodb'
+import { setTimeout } from 'timers/promises'
 import type { Collection, WithId, Document } from 'mongodb'
 
 const reconnectMaxTries = 3
@@ -19,16 +20,15 @@ export const MongoHelper = {
     this.client = null
   },
 
-  async reconnect (uri: string, times: number, delay: number): Promise<void> {
+  async reconnect (uri: string, times: number, delay: number): Promise<boolean> {
     await this.connect(uri)
-    if (this.client) return
+    if (this.client) return true
 
     const updatedTimes = times - 1
-    if (updatedTimes <= 0) return
+    if (updatedTimes <= 0) return false
 
-    setTimeout(async () => {
-      await this.reconnect(uri, updatedTimes, delay)
-    }, delay)
+    await setTimeout(delay)
+    return await this.reconnect(uri, updatedTimes, delay)
   },
 
   async getCollection (name: string): Promise<Collection> {
