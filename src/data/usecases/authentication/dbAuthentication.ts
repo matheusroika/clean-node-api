@@ -1,4 +1,4 @@
-import type { AuthValues, HashComparer, LoadAccountByEmailRepository, Encrypter, UpdateAccessTokenRepository } from './dbAuthenticationProtocols'
+import type { AuthValues, HashComparer, LoadAccountByEmailRepository, Encrypter, UpdateAccessTokenRepository } from './DbAuthenticationProtocols'
 
 export class DbAuthentication {
   private readonly loadAccountByEmailRepository: LoadAccountByEmailRepository

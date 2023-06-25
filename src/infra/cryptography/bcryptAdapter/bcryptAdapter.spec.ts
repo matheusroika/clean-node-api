@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt'
-import { BcryptAdapter } from './bcryptAdapter'
+import { BcryptAdapter } from './BcryptAdapter'
 
 const salt = 12
 const makeSut = (): BcryptAdapter => {

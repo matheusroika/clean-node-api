@@ -1,5 +1,5 @@
-import { DbAddAccount } from './dbAddAccount'
-import type { Account, AccountValues, AddAccountRepository, Hasher } from './dbAddAccountProtocols'
+import { DbAddAccount } from './DbAddAccount'
+import type { Account, AccountValues, AddAccountRepository, Hasher } from './DbAddAccountProtocols'
 
 interface Sut {
   sut: DbAddAccount

@@ -1,4 +1,4 @@
-import type { Account, AccountValues, AddAccount, AddAccountRepository, Hasher } from './dbAddAccountProtocols'
+import type { Account, AccountValues, AddAccount, AddAccountRepository, Hasher } from './DbAddAccountProtocols'
 
 export class DbAddAccount implements AddAccount {
   private readonly hasher: Hasher

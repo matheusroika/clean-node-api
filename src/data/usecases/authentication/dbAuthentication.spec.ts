@@ -1,5 +1,5 @@
-import { DbAuthentication } from './dbAuthentication'
-import type { Account, AuthValues, HashComparer, LoadAccountByEmailRepository, Encrypter, UpdateAccessTokenRepository } from './dbAuthenticationProtocols'
+import { DbAuthentication } from './DbAuthentication'
+import type { Account, AuthValues, HashComparer, LoadAccountByEmailRepository, Encrypter, UpdateAccessTokenRepository } from './DbAuthenticationProtocols'
 
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   class LoadAccountByEmailRepositoryStub implements LoadAccountByEmailRepository {

@@ -1,6 +1,6 @@
 import { badRequest, ok, serverError } from '../../helpers/http/httpHelper'
-import { SignUpController } from './signup'
-import type { AddAccount, Account, AccountValues, HttpRequest, Validation } from './signupProtocols'
+import { SignUpController } from './SignUpController'
+import type { AddAccount, Account, AccountValues, HttpRequest, Validation } from './SignUpControllerProtocols'
 
 interface Sut {
   sut: SignUpController

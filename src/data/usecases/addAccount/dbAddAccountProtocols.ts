@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-export * from '../../../domain/models/account'
-export * from '../../../domain/usecases/addAccount'
-export * from '../../protocols/cryptography/hasher'
-export * from '../../protocols/db/addAccountRepository'
+export * from '../../../domain/models/Account'
+export * from '../../../domain/usecases/AddAccount'
+export * from '../../protocols/cryptography/Hasher'
+export * from '../../protocols/db/account/AddAccountRepository'

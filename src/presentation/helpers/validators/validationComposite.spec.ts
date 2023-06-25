@@ -1,5 +1,5 @@
-import { ValidationComposite } from './validationComposite'
-import type { Validation } from '../../protocols/validation'
+import { ValidationComposite } from './ValidationComposite'
+import type { Validation } from '../../protocols/Validation'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {

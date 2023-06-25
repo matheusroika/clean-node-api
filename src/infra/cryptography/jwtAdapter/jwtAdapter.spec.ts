@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-import { JwtAdapter } from './jwtAdapter'
+import { JwtAdapter } from './JwtAdapter'
 
 interface Sut {
   sut: JwtAdapter
