@@ -2,11 +2,11 @@ import crypto from 'crypto'
 import fs from 'fs'
 
 export const cryptoHelper = {
-  async getKeyString (pathToKey: string) {
+  getKeyString (pathToKey: string) {
     return fs.readFileSync(pathToKey, 'utf-8')
   },
 
-  async getKeyObject (keyString: string) {
+  getKeyObject (keyString: string) {
     return crypto.createPrivateKey({
       key: keyString,
       format: 'pem',
