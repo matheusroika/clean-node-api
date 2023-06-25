@@ -12,7 +12,8 @@ import type { Controller } from '../../../presentation/protocols'
 export const makeLoginController = (): Controller => {
   const salt = 12
   const isKey = true
-  const secret = cryptoHelper.getKeyObject(cryptoHelper.getKeyString('**/keys/jwt/jwtRS256.key'))
+  const keyPath = process.env.NODE_ENV === 'production' ? 'jwtRS256.key' : '**/keys/jwt/jwtRS256.key'
+  const secret = cryptoHelper.getKeyObject(cryptoHelper.getKeyString(keyPath))
   const accountMongoRepository = new AccountMongoRepository()
   const bcryptAdapter = new BcryptAdapter(salt)
   const jwtAdapter = new JwtAdapter(secret, isKey)
