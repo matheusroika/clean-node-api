@@ -3,4 +3,5 @@ dist
 coverage
 .vscode
 .env
+.env.test
 keys
