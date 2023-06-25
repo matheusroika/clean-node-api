@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export * from './CompareFieldsValidation'
 export * from './EmailValidation'
 export * from './RequiredFieldValidation'

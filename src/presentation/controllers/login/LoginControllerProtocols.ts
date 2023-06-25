@@ -1,4 +1,4 @@
 /* istanbul ignore file */
 export * from '../../protocols'
-export * from '../../../domain/usecases/Authentication'
+export * from '../../../domain/useCases/Authentication'
 export * from '../../protocols/Validation'

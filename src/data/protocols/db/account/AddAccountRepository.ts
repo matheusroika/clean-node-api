@@ -1,4 +1,4 @@
-import type { AccountValues } from '../../../../domain/usecases/AddAccount'
+import type { AccountValues } from '../../../../domain/useCases/AddAccount'
 import type { Account } from '../../../../domain/models/Account'
 
 export interface AddAccountRepository {

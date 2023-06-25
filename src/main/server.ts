@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 import 'dotenv/config'
 import { MongoHelper } from '../infra/db/mongodb/helpers/mongoHelper'
 
