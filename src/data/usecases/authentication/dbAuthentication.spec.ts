@@ -23,7 +23,7 @@ const makeHashComparer = (): HashComparer => {
 
 const makeEncrypter = (): Encrypter => {
   class EncrypterStub implements Encrypter {
-    async encrypt (value: string): Promise<string> {
+    encrypt (value: string): string {
       return 'any_token'
     }
   }
@@ -33,7 +33,7 @@ const makeEncrypter = (): Encrypter => {
 
 const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
   class UpdateAccessTokenRepositoryStub implements UpdateAccessTokenRepository {
-    async update (id: string, token: string): Promise<void> {
+    async updateAccessToken (id: string, token: string): Promise<void> {
     }
   }
 
@@ -132,7 +132,7 @@ describe('Db Authentication Use Case', () => {
 
   test('Should throw if Encrypter throws', async () => {
     const { sut, encrypterStub } = makeSut()
-    jest.spyOn(encrypterStub, 'encrypt').mockImplementationOnce(async () => { throw new Error() })
+    jest.spyOn(encrypterStub, 'encrypt').mockImplementationOnce(() => { throw new Error() })
     const promise = sut.auth(makeFakeAuthValues())
     await expect(promise).rejects.toThrow()
   })
@@ -145,14 +145,14 @@ describe('Db Authentication Use Case', () => {
 
   test('Should call UpdateAccessTokenRepository with correct values', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
-    const generateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'update')
+    const generateSpy = jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken')
     await sut.auth(makeFakeAuthValues())
     expect(generateSpy).toHaveBeenCalledWith('any_id', 'any_token')
   })
 
   test('Should throw if UpdateAccessTokenRepository throws', async () => {
     const { sut, updateAccessTokenRepositoryStub } = makeSut()
-    jest.spyOn(updateAccessTokenRepositoryStub, 'update').mockImplementationOnce(async () => { throw new Error() })
+    jest.spyOn(updateAccessTokenRepositoryStub, 'updateAccessToken').mockImplementationOnce(async () => { throw new Error() })
     const promise = sut.auth(makeFakeAuthValues())
     await expect(promise).rejects.toThrow()
   })
