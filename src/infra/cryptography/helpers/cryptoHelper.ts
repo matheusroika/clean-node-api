@@ -1,9 +1,11 @@
 import crypto from 'crypto'
+import fg from 'fast-glob'
 import fs from 'fs'
 
 export const cryptoHelper = {
   getKeyString (pathToKey: string) {
-    return fs.readFileSync(pathToKey, 'utf-8')
+    const paths = fg.sync(pathToKey)
+    return fs.readFileSync(paths[0], 'utf-8')
   },
 
   getKeyObject (keyString: string) {
@@ -11,7 +13,6 @@ export const cryptoHelper = {
       key: keyString,
       format: 'pem',
       type: 'pkcs8',
-      encoding: 'aes-256-cbc',
       passphrase: process.env.JWT_KEY_PASSPHRASE
     })
   }
