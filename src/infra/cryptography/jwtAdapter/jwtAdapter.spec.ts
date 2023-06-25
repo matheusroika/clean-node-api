@@ -32,4 +32,10 @@ describe('JSON Web Token Adapter', () => {
     const accessToken = sut.encrypt('any_id')
     expect(accessToken).toBe('any_token')
   })
+
+  test('Should throw if jwt.sign throws', () => {
+    const { sut } = makeSut()
+    jest.spyOn(jwt, 'sign').mockImplementationOnce(() => { throw new Error() })
+    expect(() => { sut.encrypt('any_id') }).toThrow()
+  })
 })
