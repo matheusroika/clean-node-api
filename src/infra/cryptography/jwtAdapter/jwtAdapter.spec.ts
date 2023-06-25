@@ -6,8 +6,9 @@ interface Sut {
 }
 
 const secret = 'secret'
+const isKey = false
 const makeSut = (): Sut => {
-  const sut = new JwtAdapter(secret)
+  const sut = new JwtAdapter(secret, isKey)
   return {
     sut
   }
