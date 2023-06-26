@@ -15,7 +15,7 @@
     "test:ci": "yarn test --coverage"
   },
   "name": "clean-node-api",
-  "version": "0.7.0",
+  "version": "0.7.5",
   "main": "index.js",
   "author": "Matheus Roika <matheusroika@hotmail.com>",
   "license": "MIT",
