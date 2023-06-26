@@ -4,5 +4,3 @@ COPY . .
 RUN yarn
 RUN yarn build
 RUN yarn --production
-EXPOSE 5050
-CMD yarn start

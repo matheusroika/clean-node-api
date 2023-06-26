@@ -37,6 +37,16 @@ export const MongoHelper = {
     return this.client.db().collection(name)
   },
 
+  getMongoUrl (): string {
+    if (process.env.NODE_ENV === 'deployment') {
+      return process.env.MONGO_REMOTE_URL as string
+    }
+    if (process.env.MONGO_URL) {
+      return process.env.MONGO_URL
+    }
+    return process.env.MONGO_LOCAL_URL as string
+  },
+
   map (document: WithId<Document>): any {
     const { _id, ...documentWithoutId } = document
     const formattedDocument = {
