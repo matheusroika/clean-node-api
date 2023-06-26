@@ -2,10 +2,10 @@
   "scripts": {
     "start": "node dist/main/server.js",
     "build": "rimraf dist && tsc",
-    "debug": "node --inspect=0.0.0.0:9222 --nolazy dist/main/server.js",
+    "debug": "nodemon -L --watch ./dist --inspect=0.0.0.0:9222 --nolazy dist/main/server.js",
     "up": "docker-compose up -d",
+    "up:build": "yarn build && docker-compose up -d --build",
     "down": "docker-compose down",
-    "up:rebuild": "docker-compose up -d --build",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests",
     "test:unit": "yarn test --watch -c jest.unit.config.js",
@@ -50,6 +50,7 @@
     "fast-glob": "^3.2.12",
     "jsonwebtoken": "^9.0.0",
     "mongodb": "^5.6.0",
+    "nodemon": "^2.0.22",
     "validator": "^13.9.0"
   },
   "engines": {

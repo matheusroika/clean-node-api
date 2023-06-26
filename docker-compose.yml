@@ -14,6 +14,11 @@ services:
     image: clean-node-api
     restart: always
     command: yarn debug
+    volumes:
+      - ./dist/:/usr/src/clean-node-api/dist/
+      - ./keys/:/usr/src/clean-node-api/keys/
+      - ./package.json:/usr/src/clean-node-api/package.json
+      - ./.env:/usr/src/clean-node-api/.env
     ports: 
       - "5050:5050"
       - "9222:9222"
