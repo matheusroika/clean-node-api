@@ -13,8 +13,9 @@ services:
     build: .
     image: clean-node-api
     restart: always
-    command: yarn start
+    command: yarn debug
     ports: 
       - "5050:5050"
+      - "9222:9222"
     links:
       - mongo-db
