@@ -10,18 +10,17 @@ services:
       - "27017:27017"
   api:
     container_name: api-container
-    build: .
-    image: clean-node-api
+    image: node:16
     working_dir: /usr/src/clean-node-api
     restart: always
-    command: yarn debug
+    command: bash -c "yarn --production && yarn debug"
     volumes:
-      - ./:/usr/src/clean-node-api
-      - exclude:/usr/src/clean-node-api/node_modules
+      - ./dist/:/usr/src/clean-node-api/dist/
+      - ./keys/:/usr/src/clean-node-api/keys/
+      - ./package.json:/usr/src/clean-node-api/package.json
+      - ./.env:/usr/src/clean-node-api/.env
     ports: 
       - "5050:5050"
       - "9222:9222"
     links:
       - mongo-db
-volumes:
-  exclude:
