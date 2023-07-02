@@ -19,7 +19,7 @@ jest.mock('jsonwebtoken', () => ({
     return 'any_token'
   },
   verify (): string {
-    return 'any_token'
+    return 'any_value'
   }
 }))
 
@@ -51,6 +51,12 @@ describe('JSON Web Token Adapter', () => {
       const verifySpy = jest.spyOn(jwt, 'verify')
       sut.decrypt('any_token')
       expect(verifySpy).toHaveBeenCalledWith('any_token', secret)
+    })
+
+    test('Should return a value on jwt.verify success', () => {
+      const { sut } = makeSut()
+      const value = sut.decrypt('any_token')
+      expect(value).toBe('any_value')
     })
   })
 })
