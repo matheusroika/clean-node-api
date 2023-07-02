@@ -52,58 +52,27 @@ describe('Survey MongoDB Repository', () => {
     expect(survey).toBeTruthy()
   })
 
-  /* test('Should throw if accountCollection.insertOne throws', async () => {
-    const { sut, promiseAccountCollection, accountCollection } = await makeSut()
-    jest.spyOn(sut, 'getAccountCollection').mockReturnValue(promiseAccountCollection)
-    jest.spyOn(accountCollection, 'insertOne').mockImplementation(() => { throw new Error() })
-    const promise = sut.add(makeFakeAccountValues())
+  test('Should throw if surveyCollection.insertOne throws', async () => {
+    const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
+    jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
+    jest.spyOn(surveyCollection, 'insertOne').mockImplementation(() => { throw new Error() })
+    const promise = sut.add(makeFakeSurveyValues())
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should throw if accountCollection.findOne throws', async () => {
-    const { sut, promiseAccountCollection, accountCollection } = await makeSut()
-    jest.spyOn(sut, 'getAccountCollection').mockReturnValue(promiseAccountCollection)
-    jest.spyOn(accountCollection, 'findOne').mockImplementation(() => { throw new Error() })
-    const promise = sut.add(makeFakeAccountValues())
+  test('Should throw if surveyCollection.findOne throws', async () => {
+    const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
+    jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
+    jest.spyOn(surveyCollection, 'findOne').mockImplementation(() => { throw new Error() })
+    const promise = sut.add(makeFakeSurveyValues())
     await expect(promise).rejects.toThrow()
   })
 
-  test('Should throw if new account can\'t be found on DB', async () => {
-    const { sut, promiseAccountCollection, accountCollection } = await makeSut()
-    jest.spyOn(sut, 'getAccountCollection').mockReturnValue(promiseAccountCollection)
-    jest.spyOn(accountCollection, 'findOne').mockResolvedValue(null)
-    const promise = sut.add(makeFakeAccountValues())
+  test('Should throw if new survey can\'t be found on DB', async () => {
+    const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
+    jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
+    jest.spyOn(surveyCollection, 'findOne').mockResolvedValue(null)
+    const promise = sut.add(makeFakeSurveyValues())
     await expect(promise).rejects.toThrow()
   })
-
-  test('Should return an account on Account.loadByEmail success', async () => {
-    const { sut } = await makeSut()
-    const accountCollection = await MongoHelper.getCollection('accounts')
-    await accountCollection.insertOne(makeFakeAccountValues())
-    const account = await sut.loadByEmail('any@email.com') as Account
-    expect(account).toBeTruthy()
-    expect(account.id).toBeTruthy()
-    expect(account.name).toBe('Any Name')
-    expect(account.email).toBe('any@email.com')
-    expect(account.password).toBe('any_password')
-  })
-
-  test('Should return null if Account.loadByEmail fails', async () => {
-    const { sut } = await makeSut()
-    const account = await sut.loadByEmail('any@email.com')
-    expect(account).toBeNull()
-  })
-
-  test('Should update the account accessToken on updateAccessToken success', async () => {
-    const { sut } = await makeSut()
-    const accountCollection = await MongoHelper.getCollection('accounts')
-    const document = await accountCollection.insertOne(makeFakeAccountValues())
-    const id = document.insertedId
-    const account = await accountCollection.findOne({ _id: id })
-    expect(account?.accessToken).toBeFalsy()
-    await sut.updateAccessToken(id.toString(), 'any_token')
-    const updatedAccount = await accountCollection.findOne({ _id: id })
-    expect(updatedAccount).toBeTruthy()
-    expect(updatedAccount?.accessToken).toBe('any_token')
-  }) */
 })
