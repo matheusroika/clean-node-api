@@ -39,7 +39,7 @@ describe('Survey Routes', () => {
         .expect(403)
     })
 
-    test('Should return 403 on POST /survey from an account with no role with accessToken', async () => {
+    test('Should return 403 on POST /survey from an account that doesn\'t have admin role with accessToken', async () => {
       const accountCollection = await mongoHelper.getCollection('accounts')
       const document = await accountCollection.insertOne({
         name: 'Any Name',
