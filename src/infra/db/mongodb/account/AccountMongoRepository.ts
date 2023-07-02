@@ -3,11 +3,12 @@ import { ObjectId } from 'mongodb'
 import type { AddAccountRepository } from '../../../../data/protocols/db/account/AddAccountRepository'
 import type { LoadAccountByEmailRepository } from '../../../../data/protocols/db/account/LoadAccountByEmailRepository'
 import type { UpdateAccessTokenRepository } from '../../../../data/protocols/db/account/UpdateAccessTokenRepository'
-import type { Collection } from 'mongodb'
+import type { LoadAccountByTokenRepository } from '../../../../data/useCases/loadAccountByToken/DbLoadAccountByTokenProtocols'
 import type { AccountValues } from '../../../../domain/useCases/AddAccount'
 import type { Account } from '../../../../domain/models/Account'
+import type { Collection } from 'mongodb'
 
-export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository {
+export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository {
   async getAccountCollection (): Promise<Collection> {
     return await MongoHelper.getCollection('accounts')
   }
@@ -35,5 +36,11 @@ export class AccountMongoRepository implements AddAccountRepository, LoadAccount
         accessToken: token
       }
     })
+  }
+
+  async loadByToken (accessToken: string, role?: string): Promise<Account | null> {
+    const accountCollection = await this.getAccountCollection()
+    const account = await accountCollection.findOne({ accessToken, role })
+    return account ? MongoHelper.map(account) : null
   }
 }
