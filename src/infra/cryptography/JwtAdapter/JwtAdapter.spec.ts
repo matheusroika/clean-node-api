@@ -58,5 +58,11 @@ describe('JSON Web Token Adapter', () => {
       const value = sut.decrypt('any_token')
       expect(value).toBe('any_value')
     })
+
+    test('Should throw if jwt.verify throws', () => {
+      const { sut } = makeSut()
+      jest.spyOn(jwt, 'verify').mockImplementationOnce(() => { throw new Error() })
+      expect(() => { sut.decrypt('any_token') }).toThrow()
+    })
   })
 })
