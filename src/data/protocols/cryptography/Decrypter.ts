@@ -1,3 +1,3 @@
 export interface Decrypter {
-  decrypt: (value: string) => string | null
+  decrypt: (token: string) => string | null
 }

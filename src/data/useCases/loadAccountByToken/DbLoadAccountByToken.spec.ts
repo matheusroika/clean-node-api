@@ -3,8 +3,8 @@ import type { Account, Decrypter, LoadAccountByTokenRepository } from './DbLoadA
 
 const makeDecrypter = (): Decrypter => {
   class DecrypterStub implements Decrypter {
-    decrypt (value: string): string | null {
-      return 'decrypted_token'
+    decrypt (token: string): string | null {
+      return 'value'
     }
   }
 
