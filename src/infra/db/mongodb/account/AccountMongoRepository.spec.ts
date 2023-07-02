@@ -146,6 +146,18 @@ describe('Account MongoDB Repository', () => {
       expect(account.password).toBe('any_password')
     })
 
+    test('Should return null on loadByToken with invalid role', async () => {
+      const { sut } = await makeSut()
+      const accountCollection = await mongoHelper.getCollection('accounts')
+      const accountValues = {
+        ...makeFakeAccountValues(),
+        accessToken: 'any_token'
+      }
+      await accountCollection.insertOne(accountValues)
+      const account = await sut.loadByToken('any_token', 'any_role')
+      expect(account).toBeNull()
+    })
+
     test('Should return null if loadByToken fails', async () => {
       const { sut } = await makeSut()
       const account = await sut.loadByToken('any_token')
