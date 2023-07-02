@@ -1,5 +1,5 @@
 import type { Collection } from 'mongodb'
-import { MongoHelper } from '../helpers/mongoHelper'
+import { mongoHelper } from '../helpers/mongoHelper'
 import { LogMongoRepository } from './LogMongoRepository'
 
 interface Sut {
@@ -9,7 +9,7 @@ interface Sut {
 
 const makeSut = async (): Promise<Sut> => {
   const sut = new LogMongoRepository()
-  const errorCollection = await MongoHelper.getCollection('errors')
+  const errorCollection = await mongoHelper.getCollection('errors')
   return {
     sut,
     errorCollection
@@ -18,15 +18,15 @@ const makeSut = async (): Promise<Sut> => {
 
 describe('Log Mongo Repository', () => {
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL as string)
+    await mongoHelper.connect(process.env.MONGO_URL as string)
   })
 
   afterAll(async () => {
-    await MongoHelper.disconnect()
+    await mongoHelper.disconnect()
   })
 
   beforeEach(async () => {
-    const errorCollection = await MongoHelper.getCollection('errors')
+    const errorCollection = await mongoHelper.getCollection('errors')
     await errorCollection.deleteMany({})
   })
 

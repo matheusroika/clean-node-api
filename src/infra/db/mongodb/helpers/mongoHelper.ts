@@ -5,7 +5,7 @@ import type { Collection, WithId, Document } from 'mongodb'
 const reconnectMaxTries = 3
 const reconnectDelayInMs = 5000
 
-export const MongoHelper = {
+export const mongoHelper = {
   client: null as unknown as MongoClient | null,
   uri: null as unknown as string,
 

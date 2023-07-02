@@ -1,19 +1,19 @@
 import request from 'supertest'
 import app from '../../config/app'
-import { MongoHelper } from '../../../infra/db/mongodb/helpers/mongoHelper'
+import { mongoHelper } from '../../../infra/db/mongodb/helpers/mongoHelper'
 import bcrypt from 'bcrypt'
 
 describe('Authentication Routes', () => {
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL as string)
+    await mongoHelper.connect(process.env.MONGO_URL as string)
   })
 
   afterAll(async () => {
-    await MongoHelper.disconnect()
+    await mongoHelper.disconnect()
   })
 
   beforeEach(async () => {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    const accountCollection = await mongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
@@ -33,7 +33,7 @@ describe('Authentication Routes', () => {
 
   describe('Login Route', () => {
     test('Should return 200 on POST /login success', async () => {
-      const accountCollection = await MongoHelper.getCollection('accounts')
+      const accountCollection = await mongoHelper.getCollection('accounts')
       const password = await bcrypt.hash('any_password', 12)
       await accountCollection.insertOne({
         name: 'Any Name',

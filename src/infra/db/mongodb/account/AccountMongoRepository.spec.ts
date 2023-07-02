@@ -1,4 +1,4 @@
-import { MongoHelper } from '../helpers/mongoHelper'
+import { mongoHelper } from '../helpers/mongoHelper'
 import { AccountMongoRepository } from './AccountMongoRepository'
 import type { Collection } from 'mongodb'
 import type { AccountValues } from '../../../../domain/useCases/AddAccount'
@@ -12,7 +12,7 @@ interface Sut {
 
 const makeSut = async (): Promise<Sut> => {
   const sut = new AccountMongoRepository()
-  const promiseAccountCollection = MongoHelper.getCollection('accounts')
+  const promiseAccountCollection = mongoHelper.getCollection('accounts')
   const accountCollection = await promiseAccountCollection
   return {
     sut,
@@ -29,15 +29,15 @@ const makeFakeAccountValues = (): AccountValues => ({
 
 describe('Account MongoDB Repository', () => {
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL as string)
+    await mongoHelper.connect(process.env.MONGO_URL as string)
   })
 
   afterAll(async () => {
-    await MongoHelper.disconnect()
+    await mongoHelper.disconnect()
   })
 
   beforeEach(async () => {
-    const accountCollection = await MongoHelper.getCollection('accounts')
+    const accountCollection = await mongoHelper.getCollection('accounts')
     await accountCollection.deleteMany({})
   })
 
@@ -80,7 +80,7 @@ describe('Account MongoDB Repository', () => {
   describe('LoadAccountByEmailRepository', () => {
     test('Should return an account on loadByEmail success', async () => {
       const { sut } = await makeSut()
-      const accountCollection = await MongoHelper.getCollection('accounts')
+      const accountCollection = await mongoHelper.getCollection('accounts')
       await accountCollection.insertOne(makeFakeAccountValues())
       const account = await sut.loadByEmail('any@email.com') as Account
       expect(account).toBeTruthy()
@@ -100,7 +100,7 @@ describe('Account MongoDB Repository', () => {
   describe('UpdateAccessTokenRepository', () => {
     test('Should update the account accessToken on updateAccessToken success', async () => {
       const { sut } = await makeSut()
-      const accountCollection = await MongoHelper.getCollection('accounts')
+      const accountCollection = await mongoHelper.getCollection('accounts')
       const document = await accountCollection.insertOne(makeFakeAccountValues())
       const id = document.insertedId
       const account = await accountCollection.findOne({ _id: id })
@@ -115,7 +115,7 @@ describe('Account MongoDB Repository', () => {
   describe('LoadAccountByTokenRepository', () => {
     test('Should return an account on loadByToken without role', async () => {
       const { sut } = await makeSut()
-      const accountCollection = await MongoHelper.getCollection('accounts')
+      const accountCollection = await mongoHelper.getCollection('accounts')
       const accountValues = {
         ...makeFakeAccountValues(),
         accessToken: 'any_token'
@@ -131,7 +131,7 @@ describe('Account MongoDB Repository', () => {
 
     test('Should return an account on loadByToken with role', async () => {
       const { sut } = await makeSut()
-      const accountCollection = await MongoHelper.getCollection('accounts')
+      const accountCollection = await mongoHelper.getCollection('accounts')
       const accountValues = {
         ...makeFakeAccountValues(),
         accessToken: 'any_token',

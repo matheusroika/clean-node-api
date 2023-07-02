@@ -1,4 +1,4 @@
-import { MongoHelper } from '../helpers/mongoHelper'
+import { mongoHelper } from '../helpers/mongoHelper'
 import { SurveyMongoRepository } from './SurveyMongoRepository'
 import type { Collection } from 'mongodb'
 import type { AddSurveyValues } from '../../../../domain/useCases/AddSurvey'
@@ -11,7 +11,7 @@ interface Sut {
 
 const makeSut = async (): Promise<Sut> => {
   const sut = new SurveyMongoRepository()
-  const promiseSurveyCollection = MongoHelper.getCollection('surveys')
+  const promiseSurveyCollection = mongoHelper.getCollection('surveys')
   const surveyCollection = await promiseSurveyCollection
   return {
     sut,
@@ -33,15 +33,15 @@ const makeFakeSurveyValues = (): AddSurveyValues => ({
 
 describe('Survey MongoDB Repository', () => {
   beforeAll(async () => {
-    await MongoHelper.connect(process.env.MONGO_URL as string)
+    await mongoHelper.connect(process.env.MONGO_URL as string)
   })
 
   afterAll(async () => {
-    await MongoHelper.disconnect()
+    await mongoHelper.disconnect()
   })
 
   beforeEach(async () => {
-    const surveyCollection = await MongoHelper.getCollection('surveys')
+    const surveyCollection = await mongoHelper.getCollection('surveys')
     await surveyCollection.deleteMany({})
   })
 
