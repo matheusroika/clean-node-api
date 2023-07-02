@@ -27,29 +27,6 @@ const makeFakeAccountValues = (): AccountValues => ({
   password: 'any_password'
 })
 
-interface AccountValuesWithToken extends AccountValues {
-  accessToken: string
-}
-
-const makeFakeAccountValuesWithToken = (): AccountValuesWithToken => ({
-  name: 'Any Name',
-  email: 'any@email.com',
-  password: 'any_password',
-  accessToken: 'any_token'
-})
-
-interface AccountValuesWithRole extends AccountValuesWithToken {
-  role: string
-}
-
-const makeFakeAccountValuesWithRole = (): AccountValuesWithRole => ({
-  name: 'Any Name',
-  email: 'any@email.com',
-  password: 'any_password',
-  accessToken: 'any_token',
-  role: 'any_role'
-})
-
 describe('Account MongoDB Repository', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL as string)
@@ -139,7 +116,11 @@ describe('Account MongoDB Repository', () => {
     test('Should return an account on loadByToken without role', async () => {
       const { sut } = await makeSut()
       const accountCollection = await MongoHelper.getCollection('accounts')
-      await accountCollection.insertOne(makeFakeAccountValuesWithToken())
+      const accountValues = {
+        ...makeFakeAccountValues(),
+        accessToken: 'any_token'
+      }
+      await accountCollection.insertOne(accountValues)
       const account = await sut.loadByToken('any_token') as Account
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
@@ -151,7 +132,12 @@ describe('Account MongoDB Repository', () => {
     test('Should return an account on loadByToken with role', async () => {
       const { sut } = await makeSut()
       const accountCollection = await MongoHelper.getCollection('accounts')
-      await accountCollection.insertOne(makeFakeAccountValuesWithRole())
+      const accountValues = {
+        ...makeFakeAccountValues(),
+        accessToken: 'any_token',
+        role: 'any_role'
+      }
+      await accountCollection.insertOne(accountValues)
       const account = await sut.loadByToken('any_token', 'any_role') as Account
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
