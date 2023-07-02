@@ -1,5 +1,5 @@
 /* istanbul ignore file */
 export * from './Controller'
-export * from './EmailValidator'
+export * from '../../validation/protocols/EmailValidator'
 export * from './Http'
 export * from './Validation'
