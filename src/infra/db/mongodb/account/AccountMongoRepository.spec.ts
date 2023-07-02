@@ -146,6 +146,23 @@ describe('Account MongoDB Repository', () => {
       expect(account.password).toBe('any_password')
     })
 
+    test('Should return an account on loadByToken if user is admin', async () => {
+      const { sut } = await makeSut()
+      const accountCollection = await mongoHelper.getCollection('accounts')
+      const accountValues = {
+        ...makeFakeAccountValues(),
+        accessToken: 'any_token',
+        role: 'admin'
+      }
+      await accountCollection.insertOne(accountValues)
+      const account = await sut.loadByToken('any_token') as Account
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('Any Name')
+      expect(account.email).toBe('any@email.com')
+      expect(account.password).toBe('any_password')
+    })
+
     test('Should return null on loadByToken with invalid role', async () => {
       const { sut } = await makeSut()
       const accountCollection = await mongoHelper.getCollection('accounts')
