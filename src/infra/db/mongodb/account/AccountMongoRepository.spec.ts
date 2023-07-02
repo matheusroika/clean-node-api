@@ -38,6 +38,18 @@ const makeFakeAccountValuesWithToken = (): AccountValuesWithToken => ({
   accessToken: 'any_token'
 })
 
+interface AccountValuesWithRole extends AccountValuesWithToken {
+  role: string
+}
+
+const makeFakeAccountValuesWithRole = (): AccountValuesWithRole => ({
+  name: 'Any Name',
+  email: 'any@email.com',
+  password: 'any_password',
+  accessToken: 'any_token',
+  role: 'any_role'
+})
+
 describe('Account MongoDB Repository', () => {
   beforeAll(async () => {
     await MongoHelper.connect(process.env.MONGO_URL as string)
@@ -129,6 +141,18 @@ describe('Account MongoDB Repository', () => {
       const accountCollection = await MongoHelper.getCollection('accounts')
       await accountCollection.insertOne(makeFakeAccountValuesWithToken())
       const account = await sut.loadByToken('any_token') as Account
+      expect(account).toBeTruthy()
+      expect(account.id).toBeTruthy()
+      expect(account.name).toBe('Any Name')
+      expect(account.email).toBe('any@email.com')
+      expect(account.password).toBe('any_password')
+    })
+
+    test('Should return an account on loadByToken with role', async () => {
+      const { sut } = await makeSut()
+      const accountCollection = await MongoHelper.getCollection('accounts')
+      await accountCollection.insertOne(makeFakeAccountValuesWithRole())
+      const account = await sut.loadByToken('any_token', 'any_role') as Account
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('Any Name')
