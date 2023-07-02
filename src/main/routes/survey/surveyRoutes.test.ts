@@ -17,7 +17,7 @@ describe('Survey Routes', () => {
   })
 
   describe('Surveys Route', () => {
-    test('Should return 204 on POST /survey success', async () => {
+    test('Should return 403 on POST /survey if account doesn\'t have admin role', async () => {
       await request(app)
         .post('/api/surveys')
         .send({
@@ -29,7 +29,7 @@ describe('Survey Routes', () => {
             answer: 'Answer 2'
           }]
         })
-        .expect(204)
+        .expect(403)
     })
   })
 })
