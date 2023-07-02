@@ -8,12 +8,20 @@ export const cryptoHelper = {
     return fs.readFileSync(paths[0], 'utf-8')
   },
 
-  getKeyObject (keyString: string) {
+  getPrivateKeyObject (keyString: string) {
     return crypto.createPrivateKey({
       key: keyString,
       format: 'pem',
       type: 'pkcs8',
       passphrase: process.env.JWT_KEY_PASSPHRASE
+    })
+  },
+
+  getPublicKeyObject (keyString: string) {
+    return crypto.createPublicKey({
+      key: keyString,
+      format: 'pem',
+      type: 'pkcs1'
     })
   }
 }
