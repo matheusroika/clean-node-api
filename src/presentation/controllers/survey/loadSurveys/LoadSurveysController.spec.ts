@@ -1,6 +1,6 @@
-import type { LoadSurveys, Survey } from './LoadSurveysControllerProtocols'
-import { ok } from './LoadSurveysControllerProtocols'
 import { LoadSurveysController } from './LoadSurveysController'
+import { ok, serverError } from './LoadSurveysControllerProtocols'
+import type { LoadSurveys, Survey } from './LoadSurveysControllerProtocols'
 
 const makeLoadSurveys = (): LoadSurveys => {
   class LoadSurveysStub implements LoadSurveys {
@@ -49,5 +49,12 @@ describe('Load Surveys Controller', () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle({})
     expect(httpResponse).toEqual(ok(makeFakeSurveys()))
+  })
+
+  test('Should return 500 if LoudSurveys throws', async () => {
+    const { sut, loadSurveysStub } = makeSut()
+    jest.spyOn(loadSurveysStub, 'load').mockImplementationOnce(async () => { throw new Error() })
+    const httpResponse = await sut.handle({})
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
