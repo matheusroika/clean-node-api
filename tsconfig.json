@@ -1,16 +1,17 @@
 {
   "compilerOptions": {
     "rootDir": "src",
+    "baseUrl": "src",
     "outDir": "dist",
     "module": "CommonJS",
     "target": "ES2019",
     "esModuleInterop": true,
     "sourceMap": true,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "@/*": ["*"]
+    }
   },
   "include": ["src"],
-  "exclude": [
-    "**/*.spec.ts",
-    "**/*.test.ts"
-  ]
+  "exclude": []
 }
