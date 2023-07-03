@@ -20,11 +20,13 @@ describe('Mongo Helper', () => {
     })
 
     test('Should return correct mongoUrl when NODE_ENV !== deployment and MONGO_URL is set', () => {
+      process.env.NODE_ENV = 'development'
       const mongoUrl = sut.getMongoUrl()
       expect(mongoUrl).toBe(process.env.MONGO_URL)
     })
 
     test('Should return correct mongoUrl when NODE_ENV !== deployment', () => {
+      process.env.NODE_ENV = 'development'
       process.env.MONGO_URL = undefined
       const mongoUrl = sut.getMongoUrl()
       expect(mongoUrl).toBe(process.env.MONGO_LOCAL_URL)
