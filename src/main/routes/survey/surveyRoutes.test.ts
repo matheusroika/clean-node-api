@@ -4,6 +4,7 @@ import app from '../../config/app'
 import { mongoHelper } from '../../../infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '../../../infra/cryptography/helpers/cryptoHelper'
 import type { AddSurveyValues } from '../../../domain/useCases/AddSurvey'
+import type { Survey } from '../../../domain/models/Survey'
 
 const makeFakeSurveyValues = (): AddSurveyValues => ({
   question: 'Question',
@@ -14,6 +15,25 @@ const makeFakeSurveyValues = (): AddSurveyValues => ({
     answer: 'Answer 2'
   }]
 })
+
+const makeFakeSurveys = (): Survey[] => ([
+  {
+    question: 'any_question',
+    answers: [{
+      image: 'any_image',
+      answer: 'any_answer'
+    }],
+    date: new Date('2023-07-02T05:52:28.514Z')
+  },
+  {
+    question: 'other_question',
+    answers: [{
+      image: 'other_image',
+      answer: 'other_answer'
+    }],
+    date: new Date('2023-07-03T05:52:28.514Z')
+  }
+])
 
 describe('Survey Routes', () => {
   beforeAll(async () => {
@@ -99,6 +119,34 @@ describe('Survey Routes', () => {
       await request(app)
         .get('/api/surveys')
         .expect(403)
+    })
+
+    test('Should return 200 on GET /surveys with valid accessToken', async () => {
+      const surveysCollection = await mongoHelper.getCollection('surveys')
+      await surveysCollection.insertMany(makeFakeSurveys())
+      const accountCollection = await mongoHelper.getCollection('accounts')
+      const document = await accountCollection.insertOne({
+        name: 'Any Name',
+        email: 'any@email.com',
+        password: 'any_password'
+      })
+      const newAccount = await accountCollection.findOne({ _id: document.insertedId })
+      if (!newAccount) return
+      const id = newAccount._id
+      const keyPath = process.env.NODE_ENV === 'deployment' ? './jwtRS256.key' : '**/keys/jwt/jwtRS256.key'
+      const secret = cryptoHelper.getPrivateKeyObject(cryptoHelper.getKeyString(keyPath))
+      const accessToken = jwt.sign({ id }, secret, { algorithm: 'RS256' })
+      await accountCollection.updateOne({
+        _id: id
+      }, {
+        $set: {
+          accessToken
+        }
+      })
+      await request(app)
+        .get('/api/surveys')
+        .set('x-access-token', accessToken)
+        .expect(200)
     })
   })
 })
