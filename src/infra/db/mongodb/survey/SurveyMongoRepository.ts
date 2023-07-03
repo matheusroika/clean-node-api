@@ -9,7 +9,10 @@ export class SurveyMongoRepository implements AddSurveyRepository {
 
   async add (surveyData: AddSurveyValues): Promise<void> {
     const surveyCollection = await this.getSurveyCollection()
-    const document = await surveyCollection.insertOne(surveyData)
+    const document = await surveyCollection.insertOne({
+      ...surveyData,
+      date: new Date()
+    })
     const survey = await surveyCollection.findOne({ _id: document.insertedId })
     if (!survey) throw new Error()
   }

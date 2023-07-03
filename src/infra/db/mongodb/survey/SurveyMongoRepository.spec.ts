@@ -27,8 +27,7 @@ const makeFakeSurveyValues = (): AddSurveyValues => ({
     answer: 'any_answer'
   }, {
     answer: 'other_answer'
-  }
-  ]
+  }]
 })
 
 describe('Survey MongoDB Repository', () => {
