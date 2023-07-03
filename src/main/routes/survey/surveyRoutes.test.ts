@@ -5,6 +5,7 @@ import { mongoHelper } from '../../../infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '../../../infra/cryptography/helpers/cryptoHelper'
 import type { AddSurveyValues } from '../../../domain/useCases/AddSurvey'
 import type { Survey } from '../../../domain/models/Survey'
+import type { AccountValues } from '../../../domain/useCases/AddAccount'
 
 const makeFakeSurveyValues = (): AddSurveyValues => ({
   question: 'Question',
@@ -35,6 +36,35 @@ const makeFakeSurveys = (): Survey[] => ([
   }
 ])
 
+interface AccountValuesWithRole extends AccountValues {
+  role?: string
+}
+
+const makeFakeAccountValues = (role?: string): AccountValuesWithRole => ({
+  name: 'Any Name',
+  email: 'any@email.com',
+  password: 'any_password',
+  role
+})
+
+const createFakeUserAndMakeAccessToken = async (role?: string): Promise<string> => {
+  const accountCollection = await mongoHelper.getCollection('accounts')
+  const document = await accountCollection.insertOne(makeFakeAccountValues(role))
+  const newAccount = await accountCollection.findOne({ _id: document.insertedId })
+  const id = newAccount?._id
+  const keyPath = process.env.NODE_ENV === 'deployment' ? './jwtRS256.key' : '**/keys/jwt/jwtRS256.key'
+  const secret = cryptoHelper.getPrivateKeyObject(cryptoHelper.getKeyString(keyPath))
+  const accessToken = jwt.sign({ id }, secret, { algorithm: 'RS256' })
+  await accountCollection.updateOne({
+    _id: id
+  }, {
+    $set: {
+      accessToken
+    }
+  })
+  return accessToken
+}
+
 describe('Survey Routes', () => {
   beforeAll(async () => {
     await mongoHelper.connect(process.env.MONGO_URL as string)
@@ -60,25 +90,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 403 on POST /surveys from an account that doesn\'t have admin role with accessToken', async () => {
-      const accountCollection = await mongoHelper.getCollection('accounts')
-      const document = await accountCollection.insertOne({
-        name: 'Any Name',
-        email: 'any@email.com',
-        password: 'any_password'
-      })
-      const newAccount = await accountCollection.findOne({ _id: document.insertedId })
-      if (!newAccount) return
-      const id = newAccount._id
-      const keyPath = process.env.NODE_ENV === 'deployment' ? './jwtRS256.key' : '**/keys/jwt/jwtRS256.key'
-      const secret = cryptoHelper.getPrivateKeyObject(cryptoHelper.getKeyString(keyPath))
-      const accessToken = jwt.sign({ id }, secret, { algorithm: 'RS256' })
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await createFakeUserAndMakeAccessToken()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -87,26 +99,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 204 on POST /surveys with valid accessToken', async () => {
-      const accountCollection = await mongoHelper.getCollection('accounts')
-      const document = await accountCollection.insertOne({
-        name: 'Any Name',
-        email: 'any@email.com',
-        password: 'any_password',
-        role: 'admin'
-      })
-      const newAccount = await accountCollection.findOne({ _id: document.insertedId })
-      if (!newAccount) return
-      const id = newAccount._id
-      const keyPath = process.env.NODE_ENV === 'deployment' ? './jwtRS256.key' : '**/keys/jwt/jwtRS256.key'
-      const secret = cryptoHelper.getPrivateKeyObject(cryptoHelper.getKeyString(keyPath))
-      const accessToken = jwt.sign({ id }, secret, { algorithm: 'RS256' })
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await createFakeUserAndMakeAccessToken('admin')
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -124,25 +117,7 @@ describe('Survey Routes', () => {
     test('Should return 200 on GET /surveys with valid accessToken', async () => {
       const surveysCollection = await mongoHelper.getCollection('surveys')
       await surveysCollection.insertMany(makeFakeSurveys())
-      const accountCollection = await mongoHelper.getCollection('accounts')
-      const document = await accountCollection.insertOne({
-        name: 'Any Name',
-        email: 'any@email.com',
-        password: 'any_password'
-      })
-      const newAccount = await accountCollection.findOne({ _id: document.insertedId })
-      if (!newAccount) return
-      const id = newAccount._id
-      const keyPath = process.env.NODE_ENV === 'deployment' ? './jwtRS256.key' : '**/keys/jwt/jwtRS256.key'
-      const secret = cryptoHelper.getPrivateKeyObject(cryptoHelper.getKeyString(keyPath))
-      const accessToken = jwt.sign({ id }, secret, { algorithm: 'RS256' })
-      await accountCollection.updateOne({
-        _id: id
-      }, {
-        $set: {
-          accessToken
-        }
-      })
+      const accessToken = await createFakeUserAndMakeAccessToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
