@@ -18,7 +18,6 @@ export class JwtAdapter implements Encrypter, Decrypter {
 
   decrypt (token: string): string | null {
     const value = jwt.verify(token, this.secret)
-    if (!value) return null
     return value as string
   }
 }
