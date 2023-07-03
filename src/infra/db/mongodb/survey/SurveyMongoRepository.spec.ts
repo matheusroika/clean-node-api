@@ -44,34 +44,36 @@ describe('Survey MongoDB Repository', () => {
     await surveyCollection.deleteMany({})
   })
 
-  test('Should add a survey on Survey.add success', async () => {
-    const { sut, surveyCollection } = await makeSut()
-    await sut.add(makeFakeSurveyValues())
-    const survey = await surveyCollection.findOne({ question: 'any_question' })
-    expect(survey).toBeTruthy()
-  })
+  describe('AddSurveyRepository', () => {
+    test('Should add a survey on Survey.add success', async () => {
+      const { sut, surveyCollection } = await makeSut()
+      await sut.add(makeFakeSurveyValues())
+      const survey = await surveyCollection.findOne({ question: 'any_question' })
+      expect(survey).toBeTruthy()
+    })
 
-  test('Should throw if surveyCollection.insertOne throws', async () => {
-    const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
-    jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
-    jest.spyOn(surveyCollection, 'insertOne').mockImplementation(() => { throw new Error() })
-    const promise = sut.add(makeFakeSurveyValues())
-    await expect(promise).rejects.toThrow()
-  })
+    test('Should throw if surveyCollection.insertOne throws', async () => {
+      const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
+      jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
+      jest.spyOn(surveyCollection, 'insertOne').mockImplementation(() => { throw new Error() })
+      const promise = sut.add(makeFakeSurveyValues())
+      await expect(promise).rejects.toThrow()
+    })
 
-  test('Should throw if surveyCollection.findOne throws', async () => {
-    const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
-    jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
-    jest.spyOn(surveyCollection, 'findOne').mockImplementation(() => { throw new Error() })
-    const promise = sut.add(makeFakeSurveyValues())
-    await expect(promise).rejects.toThrow()
-  })
+    test('Should throw if surveyCollection.findOne throws', async () => {
+      const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
+      jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
+      jest.spyOn(surveyCollection, 'findOne').mockImplementation(() => { throw new Error() })
+      const promise = sut.add(makeFakeSurveyValues())
+      await expect(promise).rejects.toThrow()
+    })
 
-  test('Should throw if new survey can\'t be found on DB', async () => {
-    const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
-    jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
-    jest.spyOn(surveyCollection, 'findOne').mockResolvedValue(null)
-    const promise = sut.add(makeFakeSurveyValues())
-    await expect(promise).rejects.toThrow()
+    test('Should throw if new survey can\'t be found on DB', async () => {
+      const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
+      jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
+      jest.spyOn(surveyCollection, 'findOne').mockResolvedValue(null)
+      const promise = sut.add(makeFakeSurveyValues())
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
