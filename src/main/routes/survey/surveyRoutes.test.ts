@@ -31,15 +31,15 @@ describe('Survey Routes', () => {
     await accountCollection.deleteMany({})
   })
 
-  describe('Surveys Route', () => {
-    test('Should return 403 on POST /survey without accessToken', async () => {
+  describe('Add Survey Route', () => {
+    test('Should return 403 on POST /surveys without accessToken', async () => {
       await request(app)
         .post('/api/surveys')
         .send(makeFakeSurveyValues())
         .expect(403)
     })
 
-    test('Should return 403 on POST /survey from an account that doesn\'t have admin role with accessToken', async () => {
+    test('Should return 403 on POST /surveys from an account that doesn\'t have admin role with accessToken', async () => {
       const accountCollection = await mongoHelper.getCollection('accounts')
       const document = await accountCollection.insertOne({
         name: 'Any Name',
@@ -66,7 +66,7 @@ describe('Survey Routes', () => {
         .expect(403)
     })
 
-    test('Should return 204 on POST /survey with valid accessToken', async () => {
+    test('Should return 204 on POST /surveys with valid accessToken', async () => {
       const accountCollection = await mongoHelper.getCollection('accounts')
       const document = await accountCollection.insertOne({
         name: 'Any Name',
@@ -92,6 +92,13 @@ describe('Survey Routes', () => {
         .set('x-access-token', accessToken)
         .send(makeFakeSurveyValues())
         .expect(204)
+    })
+  })
+  describe('Load Surveys Route', () => {
+    test('Should return 403 on GET /surveys without accessToken', async () => {
+      await request(app)
+        .get('/api/surveys')
+        .expect(403)
     })
   })
 })
