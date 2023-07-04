@@ -1,6 +1,6 @@
 import type { Collection } from 'mongodb'
-import type { AddSurveyRepository, AddSurveyValues } from '../../../../data/useCases/addSurvey/DbAddSurveyProtocols'
-import type { LoadSurveysRepository, Survey } from '../../../../data/useCases/loadSurveys/DbLoadSurveysProtocols'
+import type { AddSurveyRepository, AddSurveyValues } from '@/data/useCases/addSurvey/DbAddSurveyProtocols'
+import type { LoadSurveysRepository, Survey } from '@/data/useCases/loadSurveys/DbLoadSurveysProtocols'
 import { mongoHelper } from '../helpers/mongoHelper'
 
 export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository {

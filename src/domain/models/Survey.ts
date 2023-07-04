@@ -1,4 +1,4 @@
-import type { SurveyAnswer } from '../useCases/AddSurvey'
+import type { SurveyAnswer } from '@/domain/useCases/AddSurvey'
 
 export interface Survey {
   question: string

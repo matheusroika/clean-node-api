@@ -1,6 +1,6 @@
 import request from 'supertest'
-import app from '../../config/app'
-import { mongoHelper } from '../../../infra/db/mongodb/helpers/mongoHelper'
+import app from '@/main/config/app'
+import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import bcrypt from 'bcrypt'
 
 describe('Authentication Routes', () => {

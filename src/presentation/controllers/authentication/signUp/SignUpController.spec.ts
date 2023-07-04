@@ -1,6 +1,5 @@
-import { EmailInUseError } from '../../../errors'
-import { badRequest, forbidden, ok, serverError } from '../../../helpers/http/httpHelper'
 import { SignUpController } from './SignUpController'
+import { badRequest, forbidden, ok, serverError, EmailInUseError } from './SignUpControllerProtocols'
 import type { AddAccount, Account, AccountValues, HttpRequest, Validation, Authentication, AuthValues } from './SignUpControllerProtocols'
 
 interface Sut {

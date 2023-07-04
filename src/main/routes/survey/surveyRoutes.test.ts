@@ -1,11 +1,11 @@
 import request from 'supertest'
 import jwt from 'jsonwebtoken'
-import app from '../../config/app'
-import { mongoHelper } from '../../../infra/db/mongodb/helpers/mongoHelper'
-import { cryptoHelper } from '../../../infra/cryptography/helpers/cryptoHelper'
-import type { AddSurveyValues } from '../../../domain/useCases/AddSurvey'
-import type { Survey } from '../../../domain/models/Survey'
-import type { AccountValues } from '../../../domain/useCases/AddAccount'
+import app from '@/main/config/app'
+import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
+import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
+import type { AddSurveyValues } from '@/domain/useCases/AddSurvey'
+import type { Survey } from '@/domain/models/Survey'
+import type { AccountValues } from '@/domain/useCases/AddAccount'
 
 const makeFakeSurveyValues = (): AddSurveyValues => ({
   question: 'Question',

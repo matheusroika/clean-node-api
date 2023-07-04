@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express'
-import type { Controller, HttpRequest } from '../../../presentation/protocols'
+import type { Controller, HttpRequest } from '@/presentation/protocols'
 
 const successStatusCodes = [200, 204]
 export const adaptRoute = (controller: Controller) => {

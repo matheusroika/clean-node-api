@@ -1,8 +1,8 @@
 import { mongoHelper } from '../helpers/mongoHelper'
 import { SurveyMongoRepository } from './SurveyMongoRepository'
 import type { Collection } from 'mongodb'
-import type { AddSurveyValues } from '../../../../domain/useCases/AddSurvey'
-import type { Survey } from '../../../../domain/models/Survey'
+import type { AddSurveyValues } from '@/domain/useCases/AddSurvey'
+import type { Survey } from '@/domain/models/Survey'
 
 interface Sut {
   sut: SurveyMongoRepository

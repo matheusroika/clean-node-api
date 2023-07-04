@@ -1,5 +1,5 @@
 /* istanbul ignore file */
-export * from '../../../protocols'
-export * from '../../../../domain/models/Survey'
-export * from '../../../../domain/useCases/LoadSurveys'
-export * from '../../../helpers/http/httpHelper'
+export * from '@/presentation/protocols'
+export * from '@/domain/models/Survey'
+export * from '@/domain/useCases/LoadSurveys'
+export * from '@/presentation/helpers/http/httpHelper'

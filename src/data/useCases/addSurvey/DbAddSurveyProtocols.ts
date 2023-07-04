@@ -1,3 +1,3 @@
 /* istanbul ignore file */
-export * from '../../../domain/useCases/AddSurvey'
-export * from '../../protocols/db/survey/AddSurveyRepository'
+export * from '@/domain/useCases/AddSurvey'
+export * from '@/data/protocols/db/survey/AddSurveyRepository'

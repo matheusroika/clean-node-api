@@ -1,8 +1,8 @@
-import type { LoadAccountByToken } from '../../../../domain/useCases/LoadAccountByToken'
-import { DbLoadAccountByToken } from '../../../../data/useCases/loadAccountByToken/DbLoadAccountByToken'
-import { JwtAdapter } from '../../../../infra/cryptography/JwtAdapter/JwtAdapter'
-import { cryptoHelper } from '../../../../infra/cryptography/helpers/cryptoHelper'
-import { AccountMongoRepository } from '../../../../infra/db/mongodb/account/AccountMongoRepository'
+import type { LoadAccountByToken } from '@/domain/useCases/LoadAccountByToken'
+import { DbLoadAccountByToken } from '@/data/useCases/loadAccountByToken/DbLoadAccountByToken'
+import { JwtAdapter } from '@/infra/cryptography/JwtAdapter/JwtAdapter'
+import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
+import { AccountMongoRepository } from '@/infra/db/mongodb/account/AccountMongoRepository'
 
 export const makeDbLoadAccountByToken = (): LoadAccountByToken => {
   const isKey = true

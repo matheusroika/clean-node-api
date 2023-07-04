@@ -1,5 +1,5 @@
-import { badRequest, ok, serverError, unauthorized } from '../../../helpers/http/httpHelper'
 import { LoginController } from './LoginController'
+import { badRequest, ok, serverError, unauthorized } from './LoginControllerProtocols'
 import type { AuthValues, Authentication, HttpRequest, Validation } from './LoginControllerProtocols'
 
 const makeAuthentication = (): Authentication => {
