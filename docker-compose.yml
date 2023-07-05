@@ -14,6 +14,8 @@ services:
     image: clean-node-api
     restart: always
     command: yarn debug
+    environment:
+      - MONGO_LOCAL_URL=mongodb://mongo-db:27017/
     volumes:
       - ./dist/:/usr/src/clean-node-api/dist/
       - ./keys/:/usr/src/clean-node-api/keys/
