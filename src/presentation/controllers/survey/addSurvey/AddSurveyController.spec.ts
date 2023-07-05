@@ -1,6 +1,6 @@
-import type { AddSurvey, AddSurveyValues, HttpRequest, Validation } from './AddSurveyControllerProtocols'
-import { badRequest, noContent, serverError } from './AddSurveyControllerProtocols'
 import { AddSurveyController } from './AddSurveyController'
+import { badRequest, noContent, serverError } from './AddSurveyControllerProtocols'
+import type { AddSurvey, AddSurveyValues, HttpRequest, Validation } from './AddSurveyControllerProtocols'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {

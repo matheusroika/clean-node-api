@@ -1,6 +1,6 @@
 import { InvalidParamError } from '@/presentation/errors'
-import type { EmailValidator } from '@/validation/protocols/EmailValidator'
 import type { Validation } from '@/presentation/protocols'
+import type { EmailValidator } from '@/validation/protocols/EmailValidator'
 
 export class EmailValidation implements Validation {
   constructor (

@@ -1,8 +1,8 @@
-import type { LogErrorRepository } from '@/data/protocols/db/log/LogErrorRepository'
-import type { Account } from '@/domain/models/Account'
 import { ok, serverError } from '@/presentation/helpers/http/httpHelper'
-import type { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
 import { LogControllerDecorator } from './LogControllerDecorator'
+import type { Account } from '@/domain/models/Account'
+import type { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import type { LogErrorRepository } from '@/data/protocols/db/log/LogErrorRepository'
 
 const makeLogErrorRepository = (): LogErrorRepository => {
   class LogErrorRepositoryStub implements LogErrorRepository {

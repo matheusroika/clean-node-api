@@ -1,6 +1,6 @@
-import type { Collection } from 'mongodb'
 import { mongoHelper } from '../helpers/mongoHelper'
 import { LogMongoRepository } from './LogMongoRepository'
+import type { Collection } from 'mongodb'
 
 interface Sut {
   sut: LogMongoRepository

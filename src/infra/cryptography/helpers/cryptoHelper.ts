@@ -1,6 +1,6 @@
-import crypto from 'crypto'
 import fg from 'fast-glob'
 import fs from 'fs'
+import crypto from 'crypto'
 
 export const cryptoHelper = {
   getKeyString (pathToKey: string) {

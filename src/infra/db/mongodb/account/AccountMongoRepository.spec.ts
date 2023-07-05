@@ -1,8 +1,8 @@
 import { mongoHelper } from '../helpers/mongoHelper'
 import { AccountMongoRepository } from './AccountMongoRepository'
 import type { Collection } from 'mongodb'
-import type { AccountValues } from '@/domain/useCases/AddAccount'
 import type { Account } from '@/domain/models/Account'
+import type { AccountValues } from '@/domain/useCases/AddAccount'
 
 interface Sut {
   sut: AccountMongoRepository

@@ -1,12 +1,12 @@
-import { mongoHelper } from '../helpers/mongoHelper'
 import { ObjectId } from 'mongodb'
+import { mongoHelper } from '../helpers/mongoHelper'
+import type { Collection } from 'mongodb'
 import type { AddAccountRepository } from '@/data/protocols/db/account/AddAccountRepository'
 import type { LoadAccountByEmailRepository } from '@/data/protocols/db/account/LoadAccountByEmailRepository'
+import type { LoadAccountByTokenRepository } from '@/data/protocols/db/account/LoadAccountByTokenRepository'
 import type { UpdateAccessTokenRepository } from '@/data/protocols/db/account/UpdateAccessTokenRepository'
-import type { LoadAccountByTokenRepository } from '@/data/useCases/loadAccountByToken/DbLoadAccountByTokenProtocols'
-import type { AccountValues } from '@/domain/useCases/AddAccount'
 import type { Account } from '@/domain/models/Account'
-import type { Collection } from 'mongodb'
+import type { AccountValues } from '@/domain/useCases/AddAccount'
 
 export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository {
   async getAccountCollection (): Promise<Collection> {

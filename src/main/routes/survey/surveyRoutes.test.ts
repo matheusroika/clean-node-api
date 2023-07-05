@@ -3,8 +3,8 @@ import jwt from 'jsonwebtoken'
 import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
-import type { AddSurveyValues } from '@/domain/useCases/AddSurvey'
 import type { Survey } from '@/domain/models/Survey'
+import type { AddSurveyValues } from '@/domain/useCases/AddSurvey'
 import type { AccountValues } from '@/domain/useCases/AddAccount'
 
 const makeFakeSurveyValues = (): AddSurveyValues => ({
