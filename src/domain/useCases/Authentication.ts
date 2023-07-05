@@ -1,4 +1,4 @@
-export interface AuthValues {
+export type AuthValues = {
   email: string
   password: string
 }

@@ -12,7 +12,7 @@ const makeLoadSurveys = (): LoadSurveys => {
   return new LoadSurveysStub()
 }
 
-interface Sut {
+type Sut = {
   sut: LoadSurveysController
   loadSurveysStub: LoadSurveys
 }

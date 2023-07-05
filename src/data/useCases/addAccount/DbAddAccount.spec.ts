@@ -1,13 +1,6 @@
 import { DbAddAccount } from './DbAddAccount'
 import type { Account, AccountValues, AddAccountRepository, Hasher, LoadAccountByEmailRepository } from './DbAddAccountProtocols'
 
-interface Sut {
-  sut: DbAddAccount
-  hasherStub: Hasher
-  addAccountRepositoryStub: AddAccountRepository
-  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
-}
-
 const makeHasher = (): Hasher => {
   class HasherStub implements Hasher {
     async hash (value: string): Promise<string> {
@@ -34,6 +27,13 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
   }
 
   return new LoadAccountByEmailRepositoryStub()
+}
+
+type Sut = {
+  sut: DbAddAccount
+  hasherStub: Hasher
+  addAccountRepositoryStub: AddAccountRepository
+  loadAccountByEmailRepositoryStub: LoadAccountByEmailRepository
 }
 
 const makeSut = (): Sut => {

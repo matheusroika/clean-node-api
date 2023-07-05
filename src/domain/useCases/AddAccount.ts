@@ -1,6 +1,6 @@
 import type { Account } from '@/domain/models/Account'
 
-export interface AccountValues {
+export type AccountValues = {
   name: string
   email: string
   password: string

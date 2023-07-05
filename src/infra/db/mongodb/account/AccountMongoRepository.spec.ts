@@ -4,7 +4,7 @@ import type { Collection } from 'mongodb'
 import type { Account } from '@/domain/models/Account'
 import type { AccountValues } from '@/domain/useCases/AddAccount'
 
-interface Sut {
+type Sut = {
   sut: AccountMongoRepository
   promiseAccountCollection: Promise<Collection>
   accountCollection: Collection

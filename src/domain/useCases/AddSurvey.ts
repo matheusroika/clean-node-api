@@ -1,9 +1,9 @@
-export interface SurveyAnswer {
+export type SurveyAnswer = {
   image?: string
   answer: string
 }
 
-export interface AddSurveyValues {
+export type AddSurveyValues = {
   question: string
   answers: SurveyAnswer[]
 }

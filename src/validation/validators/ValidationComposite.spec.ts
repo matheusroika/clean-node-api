@@ -11,7 +11,7 @@ const makeValidation = (): Validation => {
   return new ValidationStub()
 }
 
-interface Sut {
+type Sut = {
   sut: ValidationComposite
   validationStubs: Validation[]
 }

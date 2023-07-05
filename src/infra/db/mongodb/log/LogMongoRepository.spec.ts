@@ -2,7 +2,7 @@ import { mongoHelper } from '../helpers/mongoHelper'
 import { LogMongoRepository } from './LogMongoRepository'
 import type { Collection } from 'mongodb'
 
-interface Sut {
+type Sut = {
   sut: LogMongoRepository
   errorCollection: Collection
 }

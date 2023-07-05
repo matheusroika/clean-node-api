@@ -4,7 +4,7 @@ import type { Collection } from 'mongodb'
 import type { Survey } from '@/domain/models/Survey'
 import type { AddSurveyValues } from '@/domain/useCases/AddSurvey'
 
-interface Sut {
+type Sut = {
   sut: SurveyMongoRepository
   promiseSurveyCollection: Promise<Collection>
   surveyCollection: Collection

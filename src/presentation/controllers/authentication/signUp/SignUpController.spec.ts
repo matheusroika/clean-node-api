@@ -2,7 +2,7 @@ import { SignUpController } from './SignUpController'
 import { badRequest, forbidden, ok, serverError, EmailInUseError } from './SignUpControllerProtocols'
 import type { AddAccount, Account, AccountValues, HttpRequest, Validation, Authentication, AuthValues } from './SignUpControllerProtocols'
 
-interface Sut {
+type Sut = {
   sut: SignUpController
   addAccountStub: AddAccount
   validationStub: Validation

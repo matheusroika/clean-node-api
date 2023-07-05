@@ -1,6 +1,6 @@
 import type { SurveyAnswer } from '@/domain/useCases/AddSurvey'
 
-export interface Survey {
+export type Survey = {
   question: string
   answers: SurveyAnswer[]
   date: Date

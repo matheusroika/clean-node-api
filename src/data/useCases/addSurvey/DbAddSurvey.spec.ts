@@ -1,7 +1,7 @@
 import { DbAddSurvey } from './DbAddSurvey'
 import type { AddSurveyRepository, AddSurveyValues } from './DbAddSurveyProtocols'
 
-interface Sut {
+type Sut = {
   sut: DbAddSurvey
   addSurveyRepositoryStub: AddSurveyRepository
 }
