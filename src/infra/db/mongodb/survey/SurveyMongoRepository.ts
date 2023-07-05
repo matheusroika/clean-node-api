@@ -1,7 +1,9 @@
 import { mongoHelper } from '../helpers/mongoHelper'
 import type { Collection } from 'mongodb'
-import type { AddSurveyRepository, AddSurveyValues } from '@/data/useCases/addSurvey/DbAddSurveyProtocols'
-import type { LoadSurveysRepository, Survey } from '@/data/useCases/loadSurveys/DbLoadSurveysProtocols'
+import type { Survey } from '@/domain/models/Survey'
+import type { AddSurveyValues } from '@/domain/useCases/AddSurvey'
+import type { AddSurveyRepository } from '@/data/protocols/db/survey/AddSurveyRepository'
+import type { LoadSurveysRepository } from '@/data/protocols/db/survey/LoadSurveysRepository'
 
 export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRepository {
   async getSurveyCollection (): Promise<Collection> {
