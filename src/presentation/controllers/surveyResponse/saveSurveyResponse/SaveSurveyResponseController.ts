@@ -20,13 +20,13 @@ export class SaveSurveyResponseController implements Controller {
       const { accountId } = httpRequest
       if (!accountId) return badRequest(new MissingParamError('accountId'))
 
-      await this.saveSurveyResponse.save({
+      const surveyResponse = await this.saveSurveyResponse.save({
         surveyId,
         accountId,
         answer,
         date: new Date()
       })
-      return ok('')
+      return ok(surveyResponse)
     } catch (error) {
       return serverError(error as Error)
     }
