@@ -70,17 +70,37 @@ const makeAccount = async (): Promise<Account> => {
   return mongoHelper.map(account)
 }
 
-const makeSurveyResponse = async (): Promise<SurveyResponse> => {
+const insertSurveyResponse = async (survey: Survey, account: Account): Promise<string> => {
+  const surveyResponseCollection = await mongoHelper.getCollection('surveyResponses')
+  const document = await surveyResponseCollection.insertOne({
+    surveyId: survey.id,
+    accountId: account.id,
+    answer: survey.answers[1].answer,
+    date: new Date('2023-07-02T05:52:28.514Z')
+  })
+  return document.insertedId.toString()
+}
+
+type MakeSurveyResponse = {
+  surveyResponse: SurveyResponse
+  previousResponseId: string | null
+}
+
+const makeSurveyResponse = async (update: boolean): Promise<MakeSurveyResponse> => {
   const { sut } = await makeSut()
   const survey = await makeSurvey()
   const account = await makeAccount()
+  const previousResponseId = update ? await insertSurveyResponse(survey, account) : null
   const surveyResponse = await sut.save({
     surveyId: survey.id,
     accountId: account.id,
     answer: survey.answers[0].answer,
     date: new Date('2023-07-02T05:52:28.514Z')
   })
-  return surveyResponse
+  return {
+    surveyResponse,
+    previousResponseId
+  }
 }
 
 describe('Survey Response MongoDB Repository', () => {
@@ -99,9 +119,16 @@ describe('Survey Response MongoDB Repository', () => {
 
   describe('SaveSurveyResponseRepository', () => {
     test('Should add a survey response if the user hasn\'t responded yet', async () => {
-      const surveyResponse = await makeSurveyResponse()
+      const { surveyResponse } = await makeSurveyResponse(false)
       expect(surveyResponse).toBeTruthy()
       expect(surveyResponse.id).toBeTruthy()
+      expect(surveyResponse.answer).toBe('any_answer')
+    })
+
+    test('Should update the survey response if user has responded already', async () => {
+      const { surveyResponse, previousResponseId } = await makeSurveyResponse(true)
+      expect(surveyResponse).toBeTruthy()
+      expect(surveyResponse.id.toString()).toBe(previousResponseId)
       expect(surveyResponse.answer).toBe('any_answer')
     })
 
