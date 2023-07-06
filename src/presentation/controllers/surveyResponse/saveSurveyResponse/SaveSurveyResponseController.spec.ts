@@ -1,5 +1,5 @@
 import { SaveSurveyResponseController } from './SaveSurveyResponseController'
-import { forbidden, InvalidParamError, ok, serverError } from './SaveSurveyResponseControllerProtocols'
+import { badRequest, forbidden, InvalidParamError, MissingParamError, ok, serverError } from './SaveSurveyResponseControllerProtocols'
 import type { HttpRequest, LoadSurveyById, Survey, SurveyResponse, SurveyResponseData, SaveSurveyResponse } from './SaveSurveyResponseControllerProtocols'
 
 const makeLoadSurveyById = (): LoadSurveyById => {
@@ -113,6 +113,14 @@ describe('Save Survey Response Controller', () => {
     const saveSpy = jest.spyOn(saveSurveyResponseStub, 'save')
     await sut.handle(makeFakeRequest())
     expect(saveSpy).toHaveBeenCalledWith(makeFakeSurveyResponseData())
+  })
+
+  test('Should return 400 if no accountId is provided', async () => {
+    const { sut } = makeSut()
+    const fakeRequest = makeFakeRequest()
+    fakeRequest.accountId = undefined
+    const httpResponse = await sut.handle(fakeRequest)
+    expect(httpResponse).toEqual(badRequest(new MissingParamError('accountId')))
   })
 
   test('Should return 500 if SaveSurveyResponse throws', async () => {
