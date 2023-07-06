@@ -2,7 +2,7 @@ import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
 import { AccountMongoRepository } from '@/infra/db/mongodb/account/AccountMongoRepository'
 import { BcryptAdapter } from '@/infra/cryptography/BcryptAdapter/BcryptAdapter'
 import { JwtAdapter } from '@/infra/cryptography/JwtAdapter/JwtAdapter'
-import { DbAuthentication } from '@/data/useCases/authentication/DbAuthentication'
+import { DbAuthentication } from '@/data/useCases/account/authentication/DbAuthentication'
 
 export const makeDbAuthentication = (): DbAuthentication => {
   const salt = 12

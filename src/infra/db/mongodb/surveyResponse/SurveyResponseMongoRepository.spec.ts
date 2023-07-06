@@ -4,8 +4,8 @@ import type { Collection, WithId } from 'mongodb'
 import type { Account } from '@/domain/models/Account'
 import type { Survey } from '@/domain/models/Survey'
 import type { SurveyResponse } from '@/domain/models/SurveyResponse'
-import type { AccountValues } from '@/domain/useCases/AddAccount'
-import type { SurveyValues } from '@/domain/useCases/AddSurvey'
+import type { AccountValues } from '@/domain/useCases/account/AddAccount'
+import type { SurveyValues } from '@/domain/useCases/survey/AddSurvey'
 
 type Sut = {
   sut: SurveyResponseMongoRepository

@@ -1,6 +1,6 @@
 import { AddSurveyController } from './AddSurveyController'
 import { badRequest, noContent, serverError } from './AddSurveyControllerProtocols'
-import type { AddSurvey, AddSurveyValues, HttpRequest, Validation } from './AddSurveyControllerProtocols'
+import type { AddSurvey, SurveyValues, HttpRequest, Validation } from './AddSurveyControllerProtocols'
 
 const makeValidation = (): Validation => {
   class ValidationStub implements Validation {
@@ -13,7 +13,7 @@ const makeValidation = (): Validation => {
 
 const makeAddSurvey = (): AddSurvey => {
   class AddSurveyStub implements AddSurvey {
-    async add (data: AddSurveyValues): Promise<void> {}
+    async add (data: SurveyValues): Promise<void> {}
   }
   return new AddSurveyStub()
 }

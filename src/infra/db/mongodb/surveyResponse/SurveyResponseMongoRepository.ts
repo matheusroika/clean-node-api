@@ -1,8 +1,8 @@
 import { mongoHelper } from '../helpers/mongoHelper'
 import type { Collection } from 'mongodb'
 import type { SurveyResponse } from '@/domain/models/SurveyResponse'
-import type { SurveyResponseData } from '@/domain/useCases/SaveSurveyResponse'
-import type { SaveSurveyResponseRepository } from '@/data/protocols/db/survey/SaveSurveyResponseRepository'
+import type { SurveyResponseData } from '@/domain/useCases/surveyResponse/SaveSurveyResponse'
+import type { SaveSurveyResponseRepository } from '@/data/protocols/db/surveyResponse/SaveSurveyResponseRepository'
 
 export class SurveyResponseMongoRepository implements SaveSurveyResponseRepository {
   async getSurveyResponseCollection (): Promise<Collection> {

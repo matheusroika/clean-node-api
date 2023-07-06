@@ -4,8 +4,8 @@ import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
 import type { Survey } from '@/domain/models/Survey'
-import type { SurveyValues } from '@/domain/useCases/AddSurvey'
-import type { AccountValues } from '@/domain/useCases/AddAccount'
+import type { SurveyValues } from '@/domain/useCases/survey/AddSurvey'
+import type { AccountValues } from '@/domain/useCases/account/AddAccount'
 
 const makeFakeSurveyValues = (): SurveyValues => ({
   question: 'Question',

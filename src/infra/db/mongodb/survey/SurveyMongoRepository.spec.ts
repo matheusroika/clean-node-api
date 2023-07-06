@@ -2,7 +2,7 @@ import { mongoHelper } from '../helpers/mongoHelper'
 import { SurveyMongoRepository } from './SurveyMongoRepository'
 import type { Collection } from 'mongodb'
 import type { Survey } from '@/domain/models/Survey'
-import type { SurveyValues } from '@/domain/useCases/AddSurvey'
+import type { SurveyValues } from '@/domain/useCases/survey/AddSurvey'
 
 type Sut = {
   sut: SurveyMongoRepository
