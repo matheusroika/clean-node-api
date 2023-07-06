@@ -9,31 +9,19 @@ import type { SurveyValues } from '@/domain/useCases/AddSurvey'
 
 type Sut = {
   sut: SurveyResponseMongoRepository
-  promiseSurveyCollection: Promise<Collection>
-  surveyCollection: Collection
   promiseSurveyResponseCollection: Promise<Collection>
   surveyResponseCollection: Collection
-  promiseAccountCollection: Promise<Collection>
-  accountCollection: Collection
 }
 
 const makeSut = async (): Promise<Sut> => {
   const sut = new SurveyResponseMongoRepository()
-  const promiseSurveyCollection = mongoHelper.getCollection('surveys')
-  const surveyCollection = await promiseSurveyCollection
   const promiseSurveyResponseCollection = mongoHelper.getCollection('surveyResponses')
-  const surveyResponseCollection = await promiseSurveyCollection
-  const promiseAccountCollection = mongoHelper.getCollection('accounts')
-  const accountCollection = await promiseSurveyCollection
+  const surveyResponseCollection = await promiseSurveyResponseCollection
 
   return {
     sut,
-    promiseSurveyCollection,
-    surveyCollection,
     promiseSurveyResponseCollection,
-    surveyResponseCollection,
-    promiseAccountCollection,
-    accountCollection
+    surveyResponseCollection
   }
 }
 
@@ -113,8 +101,8 @@ describe('Survey Response MongoDB Repository', () => {
   })
 
   beforeEach(async () => {
-    const surveyCollection = await mongoHelper.getCollection('surveys')
-    await surveyCollection.deleteMany({})
+    const surveyResponseCollection = await mongoHelper.getCollection('surveyResponses')
+    await surveyResponseCollection.deleteMany({})
   })
 
   describe('SaveSurveyResponseRepository', () => {
@@ -132,28 +120,17 @@ describe('Survey Response MongoDB Repository', () => {
       expect(surveyResponse.answer).toBe('any_answer')
     })
 
-    /* test('Should throw if surveyCollection.insertOne throws', async () => {
-      const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
-      jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
-      jest.spyOn(surveyCollection, 'insertOne').mockImplementation(() => { throw new Error() })
-      const promise = sut.add(makeFakeSurveyValues())
+    test('Should throw if surveyResponseCollection.findOneAndUpdate throws', async () => {
+      const { sut, promiseSurveyResponseCollection, surveyResponseCollection } = await makeSut()
+      jest.spyOn(sut, 'getSurveyResponseCollection').mockReturnValue(promiseSurveyResponseCollection)
+      jest.spyOn(surveyResponseCollection, 'findOneAndUpdate').mockImplementation(() => { throw new Error() })
+      const promise = sut.save({
+        accountId: 'account_id',
+        surveyId: 'survey_id',
+        answer: 'any_answer',
+        date: new Date()
+      })
       await expect(promise).rejects.toThrow()
     })
-
-    test('Should throw if surveyCollection.findOne throws', async () => {
-      const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
-      jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
-      jest.spyOn(surveyCollection, 'findOne').mockImplementation(() => { throw new Error() })
-      const promise = sut.add(makeFakeSurveyValues())
-      await expect(promise).rejects.toThrow()
-    })
-
-    test('Should throw if new survey can\'t be found on DB', async () => {
-      const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
-      jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
-      jest.spyOn(surveyCollection, 'findOne').mockResolvedValue(null)
-      const promise = sut.add(makeFakeSurveyValues())
-      await expect(promise).rejects.toThrow()
-    }) */
   })
 })
