@@ -1,18 +1,31 @@
-import { InvalidParamError, forbidden, ok, serverError } from '@/presentation/middlewares/AuthMiddlewareProtocols'
-import type { Controller, HttpRequest, HttpResponse, LoadSurveyById } from './SaveSurveyResponseControllerProtocols'
+import { InvalidParamError, MissingParamError, badRequest, forbidden, ok, serverError } from '@/presentation/middlewares/AuthMiddlewareProtocols'
+import type { Controller, HttpRequest, HttpResponse, LoadSurveyById, SaveSurveyResponse } from './SaveSurveyResponseControllerProtocols'
 
 export class SaveSurveyResponseController implements Controller {
   constructor (
-    private readonly loadSurveyById: LoadSurveyById
+    private readonly loadSurveyById: LoadSurveyById,
+    private readonly saveSurveyResponse: SaveSurveyResponse
   ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const { surveyId } = httpRequest.params
-      const { answer } = httpRequest.body
       const survey = await this.loadSurveyById.loadById(surveyId)
       if (!survey) return forbidden(new InvalidParamError('params.surveyId'))
-      if (!survey.answers.includes(answer)) return forbidden(new InvalidParamError('body.answer'))
+
+      const { answer } = httpRequest.body
+      const answers = survey.answers.map(a => a.answer)
+      if (!answers.includes(answer)) return forbidden(new InvalidParamError('body.answer'))
+
+      const { accountId } = httpRequest
+      if (!accountId) return badRequest(new MissingParamError('accountId'))
+
+      await this.saveSurveyResponse.save({
+        surveyId,
+        accountId,
+        answer,
+        date: new Date()
+      })
       return ok('')
     } catch (error) {
       return serverError(error as Error)
