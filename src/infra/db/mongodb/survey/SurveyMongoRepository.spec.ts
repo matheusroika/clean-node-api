@@ -31,26 +31,22 @@ const makeFakeSurveyValues = (): SurveyValues => ({
   }]
 })
 
-const makeFakeSurvey = (): Survey => ({
-  id: 'any_id',
-  question: 'any_question',
-  answers: [{
-    image: 'any_image',
-    answer: 'any_answer'
-  }],
+const makeFakeSurveyValuesWithDate = (): FakeSurveyValues => ({
+  ...makeFakeSurveyValues(),
   date: new Date('2023-07-02T05:52:28.514Z')
 })
 
-const makeFakeSurveys = (): Survey[] => ([
-  makeFakeSurvey(),
+type FakeSurveyValues = Omit<Survey, 'id'>
+
+const makeFakeSurveys = (): FakeSurveyValues[] => ([
+  makeFakeSurveyValuesWithDate(),
   {
-    id: 'other_id',
     question: 'other_question',
     answers: [{
       image: 'other_image',
       answer: 'other_answer'
     }],
-    date: new Date('2023-07-03T05:52:28.514Z')
+    date: new Date('2023-07-03T12:31:52.514Z')
   }
 ])
 
@@ -107,6 +103,7 @@ describe('Survey MongoDB Repository', () => {
       await surveyCollection.insertMany(makeFakeSurveys())
       const surveys = await sut.loadSurveys()
       expect(surveys.length).toBe(2)
+      expect(surveys[1].id).toBeTruthy()
       expect(surveys[0].question).toBe('any_question')
       expect(surveys[1].question).toBe('other_question')
     })
@@ -122,10 +119,13 @@ describe('Survey MongoDB Repository', () => {
   describe('LoadSurveyByIdRepository', () => {
     test('Should load a survey on success', async () => {
       const { sut, surveyCollection } = await makeSut()
-      const document = await surveyCollection.insertOne(makeFakeSurvey())
+      const document = await surveyCollection.insertOne(makeFakeSurveyValuesWithDate())
       const id = document.insertedId
       const survey = await sut.loadById(id.toString())
-      expect(survey).toEqual(makeFakeSurvey())
+      expect(survey).toBeTruthy()
+      expect(survey?.id).toBeTruthy()
+      expect(survey?.question).toBe('any_question')
+      expect(survey?.answers[1].answer).toBe('other_answer')
     })
 
     test('Should return null if LoadSurveyByIdRepository.loadById returns null', async () => {
