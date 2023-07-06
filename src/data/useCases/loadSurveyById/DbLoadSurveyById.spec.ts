@@ -3,7 +3,7 @@ import type { LoadSurveyByIdRepository, Survey } from './DbLoadSurveyByIdProtoco
 
 const makeLoadSurveyByIdRepositoryStub = (): LoadSurveyByIdRepository => {
   class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
-    async loadById (id: string): Promise<Survey> {
+    async loadById (id: string): Promise<Survey | null> {
       return makeFakeSurvey()
     }
   }
@@ -45,13 +45,20 @@ describe('Db Load Survey by ID', () => {
 
   test('Should return a Survey on success', async () => {
     const { sut } = makeSut()
-    const surveys = await sut.loadById('any_id')
-    expect(surveys).toEqual(makeFakeSurvey())
+    const survey = await sut.loadById('any_id')
+    expect(survey).toEqual(makeFakeSurvey())
+  })
+
+  test('Should return null if LoadSurveyByIdRepository.loadSurveyById returns null', async () => {
+    const { sut, loadSurveyByIdRepositoryStub } = makeSut()
+    jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById').mockResolvedValueOnce(null)
+    const survey = await sut.loadById('any_id')
+    expect(survey).toBeNull()
   })
 
   test('Should throw if LoadSurveyByIdRepository.loadSurveyById throws', async () => {
     const { sut, loadSurveyByIdRepositoryStub } = makeSut()
-    jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(loadSurveyByIdRepositoryStub, 'loadById').mockImplementationOnce(async () => { throw new Error() })
     const promise = sut.loadById('any_id')
     await expect(promise).rejects.toThrow()
   })
