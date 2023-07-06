@@ -4,10 +4,10 @@ import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
 import type { Survey } from '@/domain/models/Survey'
-import type { AddSurveyValues } from '@/domain/useCases/AddSurvey'
+import type { SurveyValues } from '@/domain/useCases/AddSurvey'
 import type { AccountValues } from '@/domain/useCases/AddAccount'
 
-const makeFakeSurveyValues = (): AddSurveyValues => ({
+const makeFakeSurveyValues = (): SurveyValues => ({
   question: 'Question',
   answers: [{
     answer: 'Answer 1',
@@ -19,6 +19,7 @@ const makeFakeSurveyValues = (): AddSurveyValues => ({
 
 const makeFakeSurveys = (): Survey[] => ([
   {
+    id: 'any_id',
     question: 'any_question',
     answers: [{
       image: 'any_image',
@@ -27,6 +28,7 @@ const makeFakeSurveys = (): Survey[] => ([
     date: new Date('2023-07-02T05:52:28.514Z')
   },
   {
+    id: 'other_id',
     question: 'other_question',
     answers: [{
       image: 'other_image',

@@ -1,5 +1,5 @@
 import { DbAddSurvey } from './DbAddSurvey'
-import type { AddSurveyRepository, AddSurveyValues } from './DbAddSurveyProtocols'
+import type { AddSurveyRepository, SurveyValues } from './DbAddSurveyProtocols'
 
 type Sut = {
   sut: DbAddSurvey
@@ -8,7 +8,7 @@ type Sut = {
 
 const makeAddSurveyRepository = (): AddSurveyRepository => {
   class AddSurveyRepositoryStub implements AddSurveyRepository {
-    async add (surveyData: AddSurveyValues): Promise<void> {}
+    async add (surveyData: SurveyValues): Promise<void> {}
   }
 
   return new AddSurveyRepositoryStub()
@@ -23,7 +23,7 @@ const makeSut = (): Sut => {
   }
 }
 
-const makeFakeSurveyValues = (): AddSurveyValues => ({
+const makeFakeSurveyValues = (): SurveyValues => ({
   question: 'any_question',
   answers: [{
     image: 'any_image',
