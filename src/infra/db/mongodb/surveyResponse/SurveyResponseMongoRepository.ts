@@ -5,10 +5,6 @@ import type { SurveyResponseData } from '@/domain/useCases/SaveSurveyResponse'
 import type { SaveSurveyResponseRepository } from '@/data/protocols/db/survey/SaveSurveyResponseRepository'
 
 export class SurveyResponseMongoRepository implements SaveSurveyResponseRepository {
-  async getSurveyCollection (): Promise<Collection> {
-    return await mongoHelper.getCollection('surveys')
-  }
-
   async getSurveyResponseCollection (): Promise<Collection> {
     return await mongoHelper.getCollection('surveyResponses')
   }
