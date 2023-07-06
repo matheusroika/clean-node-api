@@ -27,6 +27,7 @@ const makeSut = (): Sut => {
 
 const makeFakeSurveys = (): Survey[] => ([
   {
+    id: 'any_id',
     question: 'any_question',
     answers: [{
       image: 'any_image',
