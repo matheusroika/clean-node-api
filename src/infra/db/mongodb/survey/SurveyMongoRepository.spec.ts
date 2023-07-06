@@ -31,16 +31,18 @@ const makeFakeSurveyValues = (): SurveyValues => ({
   }]
 })
 
+const makeFakeSurvey = (): Survey => ({
+  id: 'any_id',
+  question: 'any_question',
+  answers: [{
+    image: 'any_image',
+    answer: 'any_answer'
+  }],
+  date: new Date('2023-07-02T05:52:28.514Z')
+})
+
 const makeFakeSurveys = (): Survey[] => ([
-  {
-    id: 'any_id',
-    question: 'any_question',
-    answers: [{
-      image: 'any_image',
-      answer: 'any_answer'
-    }],
-    date: new Date('2023-07-02T05:52:28.514Z')
-  },
+  makeFakeSurvey(),
   {
     id: 'other_id',
     question: 'other_question',
@@ -114,6 +116,16 @@ describe('Survey MongoDB Repository', () => {
       const surveys = await sut.loadSurveys()
       expect(surveys.length).toBe(0)
       expect(surveys).toEqual([])
+    })
+  })
+
+  describe('LoadSurveyByIdRepository', () => {
+    test('Should load a survey on success', async () => {
+      const { sut, surveyCollection } = await makeSut()
+      const document = await surveyCollection.insertOne(makeFakeSurvey())
+      const id = document.insertedId
+      const survey = await sut.loadById(id.toString())
+      expect(survey).toEqual(makeFakeSurvey())
     })
   })
 })
