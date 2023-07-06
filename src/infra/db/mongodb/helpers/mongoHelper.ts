@@ -55,5 +55,9 @@ export const mongoHelper = {
       ...documentWithoutId
     }
     return formattedDocument
+  },
+
+  mapArray (documents: Array<WithId<Document>>): any[] {
+    return documents.map(document => this.map(document))
   }
 }
