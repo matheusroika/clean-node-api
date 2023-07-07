@@ -1,11 +1,12 @@
 import { SaveSurveyResponseController } from './SaveSurveyResponseController'
+import { mockSurvey } from '@/domain/tests'
 import { badRequest, forbidden, InvalidParamError, MissingParamError, ok, serverError } from './SaveSurveyResponseControllerProtocols'
 import type { HttpRequest, LoadSurveyById, Survey, SurveyResponse, SaveSurveyResponseParams, SaveSurveyResponse } from './SaveSurveyResponseControllerProtocols'
 
 const makeLoadSurveyById = (): LoadSurveyById => {
   class LoadSurveyByIdStub implements LoadSurveyById {
     async loadById (id: string): Promise<Survey | null> {
-      return makeFakeSurvey()
+      return mockSurvey()
     }
   }
 
@@ -49,15 +50,6 @@ const makeFakeSaveSurveyResponseParams = (): SaveSurveyResponseParams => ({
 const makeFakeSurveyResponse = (): SurveyResponse => ({
   id: 'any_id',
   ...makeFakeSaveSurveyResponseParams()
-})
-
-const makeFakeSurvey = (): Survey => ({
-  id: 'survey_id',
-  question: 'any_question',
-  answers: [{
-    answer: 'any_answer'
-  }],
-  date: new Date('2023-07-03T05:52:28.514Z')
 })
 
 const makeFakeRequest = (): HttpRequest => ({

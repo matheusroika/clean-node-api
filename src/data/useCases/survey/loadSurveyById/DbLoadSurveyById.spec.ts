@@ -1,13 +1,13 @@
 import { DbLoadSurveyById } from './DbLoadSurveyById'
+import { mockSurvey } from '@/domain/tests'
 import type { LoadSurveyByIdRepository, Survey } from './DbLoadSurveyByIdProtocols'
 
 const makeLoadSurveyByIdRepositoryStub = (): LoadSurveyByIdRepository => {
   class LoadSurveyByIdRepositoryStub implements LoadSurveyByIdRepository {
     async loadById (id: string): Promise<Survey | null> {
-      return makeFakeSurvey()
+      return mockSurvey()
     }
   }
-
   return new LoadSurveyByIdRepositoryStub()
 }
 
@@ -25,16 +25,6 @@ const makeSut = (): Sut => {
   }
 }
 
-const makeFakeSurvey = (): Survey => ({
-  id: 'any_id',
-  question: 'any_question',
-  answers: [{
-    image: 'any_image',
-    answer: 'any_answer'
-  }],
-  date: new Date('2023-07-03T05:52:28.514Z')
-})
-
 describe('Db Load Survey by ID', () => {
   test('Should call LoadSurveyByIdRepository.loadSurveyById with correct ID', async () => {
     const { sut, loadSurveyByIdRepositoryStub } = makeSut()
@@ -46,7 +36,7 @@ describe('Db Load Survey by ID', () => {
   test('Should return a Survey on success', async () => {
     const { sut } = makeSut()
     const survey = await sut.loadById('any_id')
-    expect(survey).toEqual(makeFakeSurvey())
+    expect(survey).toEqual(mockSurvey())
   })
 
   test('Should return null if LoadSurveyByIdRepository.loadSurveyById returns null', async () => {

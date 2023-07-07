@@ -1,3 +1,4 @@
+import type { Survey } from '@/domain/models/Survey'
 import type { AddSurveyParams } from '@/domain/useCases/survey/AddSurvey'
 
 export const mockAddSurveyParams = (): AddSurveyParams => ({
@@ -45,3 +46,13 @@ export const mockSurveysToInsertMany = (): SurveyToInsert[] => ([
     date: new Date('2023-07-03T12:31:52.514Z')
   }
 ])
+
+export const mockSurvey = (): Survey => ({
+  id: 'any_id',
+  question: 'any_question',
+  answers: [{
+    image: 'any_image',
+    answer: 'any_answer'
+  }],
+  date: new Date('2023-07-03T05:52:28.514Z')
+})
