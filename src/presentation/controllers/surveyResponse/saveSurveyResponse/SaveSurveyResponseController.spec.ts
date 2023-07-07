@@ -103,7 +103,7 @@ describe('Save Survey Response Controller', () => {
 
   test('Should return 500 if LoadSurveyById throws', async () => {
     const { sut, loadSurveyByIdStub } = makeSut()
-    jest.spyOn(loadSurveyByIdStub, 'loadById').mockImplementationOnce(async () => { throw new Error() })
+    jest.spyOn(loadSurveyByIdStub, 'loadById').mockImplementationOnce(() => { throw new Error() })
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })
@@ -125,7 +125,7 @@ describe('Save Survey Response Controller', () => {
 
   test('Should return 500 if SaveSurveyResponse throws', async () => {
     const { sut, saveSurveyResponseStub } = makeSut()
-    jest.spyOn(saveSurveyResponseStub, 'save').mockImplementationOnce(async () => { throw new Error() })
+    jest.spyOn(saveSurveyResponseStub, 'save').mockImplementationOnce(() => { throw new Error() })
     const httpResponse = await sut.handle(makeFakeRequest())
     expect(httpResponse).toEqual(serverError(new Error()))
   })

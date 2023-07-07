@@ -42,7 +42,7 @@ describe('Db Add Survey Use Case', () => {
 
   test('Should throw if AddSurveyRepository throws', async () => {
     const { sut, addSurveyRepositoryStub } = makeSut()
-    jest.spyOn(addSurveyRepositoryStub, 'add').mockImplementationOnce(async () => { throw new Error() })
+    jest.spyOn(addSurveyRepositoryStub, 'add').mockImplementationOnce(() => { throw new Error() })
     const promise = sut.add(makeFakeAddSurveyParams())
     await expect(promise).rejects.toThrow()
   })

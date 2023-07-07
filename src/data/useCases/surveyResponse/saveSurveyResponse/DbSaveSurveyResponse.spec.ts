@@ -54,7 +54,7 @@ describe('Db Save Survey Response Use Case', () => {
 
   test('Should throw if SaveSurveyResponseRepository.saveSurveyResponse throws', async () => {
     const { sut, saveSurveyResponseRepositoryStub } = makeSut()
-    jest.spyOn(saveSurveyResponseRepositoryStub, 'save').mockImplementationOnce(async () => { throw new Error() })
+    jest.spyOn(saveSurveyResponseRepositoryStub, 'save').mockImplementationOnce(() => { throw new Error() })
     const promise = sut.save(makeFakeSaveSurveyResponseParams())
     await expect(promise).rejects.toThrow()
   })
