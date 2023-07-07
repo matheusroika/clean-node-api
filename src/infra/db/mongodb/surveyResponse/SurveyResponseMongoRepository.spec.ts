@@ -4,8 +4,8 @@ import type { Collection, WithId } from 'mongodb'
 import type { Account } from '@/domain/models/Account'
 import type { Survey } from '@/domain/models/Survey'
 import type { SurveyResponse } from '@/domain/models/SurveyResponse'
-import type { AccountParams } from '@/domain/useCases/account/AddAccount'
-import type { SurveyParams } from '@/domain/useCases/survey/AddSurvey'
+import type { AddAccountParams } from '@/domain/useCases/account/AddAccount'
+import type { AddSurveyParams } from '@/domain/useCases/survey/AddSurvey'
 
 type Sut = {
   sut: SurveyResponseMongoRepository
@@ -25,7 +25,7 @@ const makeSut = async (): Promise<Sut> => {
   }
 }
 
-const makeFakeSurveyParams = (): SurveyParams => ({
+const makeFakeAddSurveyParams = (): AddSurveyParams => ({
   question: 'any_question',
   answers: [{
     image: 'any_image',
@@ -35,7 +35,7 @@ const makeFakeSurveyParams = (): SurveyParams => ({
   }]
 })
 
-const makeFakeAccountParams = (): AccountParams => ({
+const makeFakeAddAccountParams = (): AddAccountParams => ({
   name: 'Any Name',
   email: 'any@email.com',
   password: 'any_password'
@@ -44,7 +44,7 @@ const makeFakeAccountParams = (): AccountParams => ({
 const makeSurvey = async (): Promise<Survey> => {
   const surveyCollection = await mongoHelper.getCollection('surveys')
   const document = await surveyCollection.insertOne({
-    ...makeFakeSurveyParams(),
+    ...makeFakeAddSurveyParams(),
     date: new Date('2023-07-02T05:52:28.514Z')
   })
   const survey = await surveyCollection.findOne({ _id: document.insertedId }) as WithId<Document>
@@ -53,7 +53,7 @@ const makeSurvey = async (): Promise<Survey> => {
 
 const makeAccount = async (): Promise<Account> => {
   const accountCollection = await mongoHelper.getCollection('accounts')
-  const document = await accountCollection.insertOne(makeFakeAccountParams())
+  const document = await accountCollection.insertOne(makeFakeAddAccountParams())
   const account = await accountCollection.findOne({ _id: document.insertedId }) as WithId<Document>
   return mongoHelper.map(account)
 }

@@ -1,6 +1,6 @@
 import { SignUpController } from './SignUpController'
 import { badRequest, forbidden, ok, serverError, EmailInUseError } from './SignUpControllerProtocols'
-import type { AddAccount, Account, AccountParams, HttpRequest, Validation, Authentication, AuthParams } from './SignUpControllerProtocols'
+import type { AddAccount, Account, AddAccountParams, HttpRequest, Validation, Authentication, AuthParams } from './SignUpControllerProtocols'
 
 type Sut = {
   sut: SignUpController
@@ -11,7 +11,7 @@ type Sut = {
 
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
-    async add (account: AccountParams): Promise<Account> {
+    async add (account: AddAccountParams): Promise<Account> {
       return await new Promise(resolve => { resolve(makeFakeAccount()) })
     }
   }

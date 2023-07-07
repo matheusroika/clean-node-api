@@ -1,6 +1,6 @@
 import { SaveSurveyResponseController } from './SaveSurveyResponseController'
 import { badRequest, forbidden, InvalidParamError, MissingParamError, ok, serverError } from './SaveSurveyResponseControllerProtocols'
-import type { HttpRequest, LoadSurveyById, Survey, SurveyResponse, SurveyResponseParams, SaveSurveyResponse } from './SaveSurveyResponseControllerProtocols'
+import type { HttpRequest, LoadSurveyById, Survey, SurveyResponse, SaveSurveyResponseParams, SaveSurveyResponse } from './SaveSurveyResponseControllerProtocols'
 
 const makeLoadSurveyById = (): LoadSurveyById => {
   class LoadSurveyByIdStub implements LoadSurveyById {
@@ -14,7 +14,7 @@ const makeLoadSurveyById = (): LoadSurveyById => {
 
 const makeSaveSurveyResponse = (): SaveSurveyResponse => {
   class SaveSurveyResponseStub implements SaveSurveyResponse {
-    async save (data: SurveyResponseParams): Promise<SurveyResponse> {
+    async save (data: SaveSurveyResponseParams): Promise<SurveyResponse> {
       return makeFakeSurveyResponse()
     }
   }
@@ -39,7 +39,7 @@ const makeSut = (): Sut => {
   }
 }
 
-const makeFakeSurveyResponseParams = (): SurveyResponseParams => ({
+const makeFakeSaveSurveyResponseParams = (): SaveSurveyResponseParams => ({
   surveyId: 'survey_id',
   accountId: 'account_id',
   answer: 'any_answer',
@@ -48,7 +48,7 @@ const makeFakeSurveyResponseParams = (): SurveyResponseParams => ({
 
 const makeFakeSurveyResponse = (): SurveyResponse => ({
   id: 'any_id',
-  ...makeFakeSurveyResponseParams()
+  ...makeFakeSaveSurveyResponseParams()
 })
 
 const makeFakeSurvey = (): Survey => ({
@@ -112,7 +112,7 @@ describe('Save Survey Response Controller', () => {
     const { sut, saveSurveyResponseStub } = makeSut()
     const saveSpy = jest.spyOn(saveSurveyResponseStub, 'save')
     await sut.handle(makeFakeRequest())
-    expect(saveSpy).toHaveBeenCalledWith(makeFakeSurveyResponseParams())
+    expect(saveSpy).toHaveBeenCalledWith(makeFakeSaveSurveyResponseParams())
   })
 
   test('Should return 400 if no accountId is provided', async () => {
