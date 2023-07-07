@@ -1,5 +1,5 @@
 import { ValidationComposite } from './ValidationComposite'
-import { mockValidation } from '@/presentation/tests'
+import { mockValidation } from '@/validation/tests'
 import type { Validation } from '@/presentation/protocols'
 
 type Sut = {

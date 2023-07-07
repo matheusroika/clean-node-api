@@ -37,7 +37,7 @@ const makeFakeServerError = (): HttpResponse => {
   return serverError(fakeError)
 }
 
-const makeFakeRequest = (): HttpRequest => ({
+const mockHttpRequest = (): HttpRequest => ({
   body: {
     name: 'Any Name',
     email: 'any@email.com',
@@ -50,13 +50,13 @@ describe('Log Controller Decorator', () => {
   test('Should call controller.handle', async () => {
     const { sut, controllerStub } = makeSut()
     const handleSpy = jest.spyOn(controllerStub, 'handle')
-    await sut.handle(makeFakeRequest())
-    expect(handleSpy).toHaveBeenCalledWith(makeFakeRequest())
+    await sut.handle(mockHttpRequest())
+    expect(handleSpy).toHaveBeenCalledWith(mockHttpRequest())
   })
 
   test('Should return the same as the controller', async () => {
     const { sut } = makeSut()
-    const httpResponse = await sut.handle(makeFakeRequest())
+    const httpResponse = await sut.handle(mockHttpRequest())
     expect(httpResponse).toEqual(ok(mockAccount()))
   })
 
@@ -64,7 +64,7 @@ describe('Log Controller Decorator', () => {
     const { sut, controllerStub, logErrorRepositoryStub } = makeSut()
     const logSpy = jest.spyOn(logErrorRepositoryStub, 'logError')
     jest.spyOn(controllerStub, 'handle').mockResolvedValueOnce(makeFakeServerError())
-    await sut.handle(makeFakeRequest())
+    await sut.handle(mockHttpRequest())
     expect(logSpy).toHaveBeenCalledWith('Any stack')
   })
 })
