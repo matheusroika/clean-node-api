@@ -26,7 +26,6 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
       return null
     }
   }
-
   return new LoadAccountByEmailRepositoryStub()
 }
 

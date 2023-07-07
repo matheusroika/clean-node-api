@@ -1,11 +1,10 @@
 import { mongoHelper } from '../helpers/mongoHelper'
 import { SurveyResponseMongoRepository } from './SurveyResponseMongoRepository'
-import { mockSurveyToInsertOne } from '@/domain/tests'
+import { mockAddAccountParams, mockSurveyToInsertOne } from '@/domain/tests'
 import type { Collection, WithId } from 'mongodb'
 import type { Account } from '@/domain/models/Account'
 import type { Survey } from '@/domain/models/Survey'
 import type { SurveyResponse } from '@/domain/models/SurveyResponse'
-import type { AddAccountParams } from '@/domain/useCases/account/AddAccount'
 
 type Sut = {
   sut: SurveyResponseMongoRepository
@@ -17,19 +16,12 @@ const makeSut = async (): Promise<Sut> => {
   const sut = new SurveyResponseMongoRepository()
   const promiseSurveyResponseCollection = mongoHelper.getCollection('surveyResponses')
   const surveyResponseCollection = await promiseSurveyResponseCollection
-
   return {
     sut,
     promiseSurveyResponseCollection,
     surveyResponseCollection
   }
 }
-
-const makeFakeAddAccountParams = (): AddAccountParams => ({
-  name: 'Any Name',
-  email: 'any@email.com',
-  password: 'any_password'
-})
 
 const makeSurvey = async (): Promise<Survey> => {
   const surveyCollection = await mongoHelper.getCollection('surveys')
@@ -40,7 +32,7 @@ const makeSurvey = async (): Promise<Survey> => {
 
 const makeAccount = async (): Promise<Account> => {
   const accountCollection = await mongoHelper.getCollection('accounts')
-  const document = await accountCollection.insertOne(makeFakeAddAccountParams())
+  const document = await accountCollection.insertOne(mockAddAccountParams())
   const account = await accountCollection.findOne({ _id: document.insertedId }) as WithId<Document>
   return mongoHelper.map(account)
 }

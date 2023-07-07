@@ -1,8 +1,8 @@
 import { mongoHelper } from '../helpers/mongoHelper'
 import { AccountMongoRepository } from './AccountMongoRepository'
+import { mockAddAccountParams } from '@/domain/tests'
 import type { Collection } from 'mongodb'
 import type { Account } from '@/domain/models/Account'
-import type { AddAccountParams } from '@/domain/useCases/account/AddAccount'
 
 type Sut = {
   sut: AccountMongoRepository
@@ -21,12 +21,6 @@ const makeSut = async (): Promise<Sut> => {
   }
 }
 
-const makeFakeAddAccountParams = (): AddAccountParams => ({
-  name: 'Any Name',
-  email: 'any@email.com',
-  password: 'any_password'
-})
-
 describe('Account MongoDB Repository', () => {
   beforeAll(async () => {
     await mongoHelper.connect(process.env.MONGO_URL as string)
@@ -44,7 +38,7 @@ describe('Account MongoDB Repository', () => {
   describe('AddAccountRepository', () => {
     test('Should return an account on add success', async () => {
       const { sut } = await makeSut()
-      const account = await sut.add(makeFakeAddAccountParams())
+      const account = await sut.add(mockAddAccountParams())
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
       expect(account.name).toBe('Any Name')
@@ -56,7 +50,7 @@ describe('Account MongoDB Repository', () => {
       const { sut, promiseAccountCollection, accountCollection } = await makeSut()
       jest.spyOn(sut, 'getAccountCollection').mockReturnValue(promiseAccountCollection)
       jest.spyOn(accountCollection, 'insertOne').mockImplementation(() => { throw new Error() })
-      const promise = sut.add(makeFakeAddAccountParams())
+      const promise = sut.add(mockAddAccountParams())
       await expect(promise).rejects.toThrow()
     })
 
@@ -64,7 +58,7 @@ describe('Account MongoDB Repository', () => {
       const { sut, promiseAccountCollection, accountCollection } = await makeSut()
       jest.spyOn(sut, 'getAccountCollection').mockReturnValue(promiseAccountCollection)
       jest.spyOn(accountCollection, 'findOne').mockImplementation(() => { throw new Error() })
-      const promise = sut.add(makeFakeAddAccountParams())
+      const promise = sut.add(mockAddAccountParams())
       await expect(promise).rejects.toThrow()
     })
 
@@ -72,7 +66,7 @@ describe('Account MongoDB Repository', () => {
       const { sut, promiseAccountCollection, accountCollection } = await makeSut()
       jest.spyOn(sut, 'getAccountCollection').mockReturnValue(promiseAccountCollection)
       jest.spyOn(accountCollection, 'findOne').mockResolvedValue(null)
-      const promise = sut.add(makeFakeAddAccountParams())
+      const promise = sut.add(mockAddAccountParams())
       await expect(promise).rejects.toThrow()
     })
   })
@@ -81,7 +75,7 @@ describe('Account MongoDB Repository', () => {
     test('Should return an account on loadByEmail success', async () => {
       const { sut } = await makeSut()
       const accountCollection = await mongoHelper.getCollection('accounts')
-      await accountCollection.insertOne(makeFakeAddAccountParams())
+      await accountCollection.insertOne(mockAddAccountParams())
       const account = await sut.loadByEmail('any@email.com') as Account
       expect(account).toBeTruthy()
       expect(account.id).toBeTruthy()
@@ -101,7 +95,7 @@ describe('Account MongoDB Repository', () => {
     test('Should update the account accessToken on updateAccessToken success', async () => {
       const { sut } = await makeSut()
       const accountCollection = await mongoHelper.getCollection('accounts')
-      const document = await accountCollection.insertOne(makeFakeAddAccountParams())
+      const document = await accountCollection.insertOne(mockAddAccountParams())
       const id = document.insertedId
       const account = await accountCollection.findOne({ _id: id })
       expect(account?.accessToken).toBeFalsy()
@@ -117,7 +111,7 @@ describe('Account MongoDB Repository', () => {
       const { sut } = await makeSut()
       const accountCollection = await mongoHelper.getCollection('accounts')
       const accountValues = {
-        ...makeFakeAddAccountParams(),
+        ...mockAddAccountParams(),
         accessToken: 'any_token'
       }
       await accountCollection.insertOne(accountValues)
@@ -133,7 +127,7 @@ describe('Account MongoDB Repository', () => {
       const { sut } = await makeSut()
       const accountCollection = await mongoHelper.getCollection('accounts')
       const accountValues = {
-        ...makeFakeAddAccountParams(),
+        ...mockAddAccountParams(),
         accessToken: 'any_token',
         role: 'any_role'
       }
@@ -150,7 +144,7 @@ describe('Account MongoDB Repository', () => {
       const { sut } = await makeSut()
       const accountCollection = await mongoHelper.getCollection('accounts')
       const accountValues = {
-        ...makeFakeAddAccountParams(),
+        ...mockAddAccountParams(),
         accessToken: 'any_token',
         role: 'admin'
       }
@@ -167,7 +161,7 @@ describe('Account MongoDB Repository', () => {
       const { sut } = await makeSut()
       const accountCollection = await mongoHelper.getCollection('accounts')
       const accountValues = {
-        ...makeFakeAddAccountParams(),
+        ...mockAddAccountParams(),
         accessToken: 'any_token'
       }
       await accountCollection.insertOne(accountValues)

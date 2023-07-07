@@ -7,6 +7,5 @@ export const makeAddSurveyValidation = (): ValidationComposite => {
   for (const field of requiredFields) {
     validations.push(new RequiredFieldValidation(field))
   }
-
   return new ValidationComposite(validations)
 }

@@ -7,6 +7,15 @@ export const mockAddAccountParams = (): AddAccountParams => ({
   password: 'any_password'
 })
 
+interface AddAccountParamsWithRole extends AddAccountParams {
+  role?: string
+}
+
+export const mockAddAccountParamsWithRole = (role?: string): AddAccountParamsWithRole => ({
+  ...mockAddAccountParams(),
+  role
+})
+
 export const mockAccount = (): Account => ({
   id: 'any_id',
   name: 'Any Name',

@@ -9,7 +9,6 @@ const makeLoadAccountByToken = (): LoadAccountByToken => {
       return mockAccount()
     }
   }
-
   return new LoadAccountByTokenStub()
 }
 

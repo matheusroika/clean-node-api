@@ -7,7 +7,6 @@ const makeValidation = (): Validation => {
       return undefined
     }
   }
-
   return new ValidationStub()
 }
 
