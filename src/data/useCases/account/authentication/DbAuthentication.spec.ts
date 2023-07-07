@@ -1,5 +1,6 @@
 import { DbAuthentication } from './DbAuthentication'
 import { mockAccount, mockAuthParams } from '@/domain/tests'
+import { mockEncrypter, mockHashComparer } from '@/data/tests'
 import type { Account, HashComparer, LoadAccountByEmailRepository, Encrypter, UpdateAccessTokenRepository } from './DbAuthenticationProtocols'
 
 const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
@@ -9,24 +10,6 @@ const makeLoadAccountByEmailRepository = (): LoadAccountByEmailRepository => {
     }
   }
   return new LoadAccountByEmailRepositoryStub()
-}
-
-const makeHashComparer = (): HashComparer => {
-  class HashComparerStub implements HashComparer {
-    async compare (value: string, hash: string): Promise<boolean> {
-      return true
-    }
-  }
-  return new HashComparerStub()
-}
-
-const makeEncrypter = (): Encrypter => {
-  class EncrypterStub implements Encrypter {
-    encrypt (value: string): string {
-      return 'any_token'
-    }
-  }
-  return new EncrypterStub()
 }
 
 const makeUpdateAccessTokenRepository = (): UpdateAccessTokenRepository => {
@@ -47,8 +30,8 @@ type Sut = {
 
 const makeSut = (): Sut => {
   const loadAccountByEmailRepositoryStub = makeLoadAccountByEmailRepository()
-  const hashComparerStub = makeHashComparer()
-  const encrypterStub = makeEncrypter()
+  const hashComparerStub = mockHashComparer()
+  const encrypterStub = mockEncrypter()
   const updateAccessTokenRepositoryStub = makeUpdateAccessTokenRepository()
   const sut = new DbAuthentication(
     loadAccountByEmailRepositoryStub,
