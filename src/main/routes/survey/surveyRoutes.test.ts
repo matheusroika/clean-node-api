@@ -3,19 +3,9 @@ import jwt from 'jsonwebtoken'
 import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
+import { mockAddSurveyParamsIntegration } from '@/domain/tests'
 import type { Survey } from '@/domain/models/Survey'
-import type { AddSurveyParams } from '@/domain/useCases/survey/AddSurvey'
 import type { AddAccountParams } from '@/domain/useCases/account/AddAccount'
-
-const makeFakeAddSurveyParams = (): AddSurveyParams => ({
-  question: 'Question',
-  answers: [{
-    answer: 'Answer 1',
-    image: 'http://image.com/image.png'
-  }, {
-    answer: 'Answer 2'
-  }]
-})
 
 const makeFakeSurveys = (): Survey[] => ([
   {
@@ -87,7 +77,7 @@ describe('Survey Routes', () => {
     test('Should return 403 on POST /surveys without accessToken', async () => {
       await request(app)
         .post('/api/surveys')
-        .send(makeFakeAddSurveyParams())
+        .send(mockAddSurveyParamsIntegration())
         .expect(403)
     })
 
@@ -96,7 +86,7 @@ describe('Survey Routes', () => {
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
-        .send(makeFakeAddSurveyParams())
+        .send(mockAddSurveyParamsIntegration())
         .expect(403)
     })
 
@@ -105,7 +95,7 @@ describe('Survey Routes', () => {
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
-        .send(makeFakeAddSurveyParams())
+        .send(mockAddSurveyParamsIntegration())
         .expect(204)
     })
   })

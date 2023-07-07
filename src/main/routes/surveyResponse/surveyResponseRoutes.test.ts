@@ -3,18 +3,8 @@ import jwt from 'jsonwebtoken'
 import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
-import type { AddSurveyParams } from '@/domain/useCases/survey/AddSurvey'
+import { mockSurveyToInsertOneIntegration } from '@/domain/tests'
 import type { AddAccountParams } from '@/domain/useCases/account/AddAccount'
-
-const makeFakeAddSurveyParams = (): AddSurveyParams => ({
-  question: 'Question',
-  answers: [{
-    answer: 'Answer 1',
-    image: 'http://image.com/image.png'
-  }, {
-    answer: 'Answer 2'
-  }]
-})
 
 interface AddAccountParamsWithRole extends AddAccountParams {
   role?: string
@@ -47,10 +37,7 @@ const makeAccessToken = async (role?: string): Promise<string> => {
 
 const makeSurveyId = async (): Promise<string> => {
   const surveyCollection = await mongoHelper.getCollection('surveys')
-  const document = await surveyCollection.insertOne({
-    ...makeFakeAddSurveyParams(),
-    date: new Date('2023-07-03T05:52:28.514Z')
-  })
+  const document = await surveyCollection.insertOne(mockSurveyToInsertOneIntegration())
   return document.insertedId.toString()
 }
 
