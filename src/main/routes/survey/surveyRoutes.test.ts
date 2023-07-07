@@ -3,23 +3,11 @@ import jwt from 'jsonwebtoken'
 import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
-import { mockAddSurveyParamsIntegration, mockSurveys } from '@/domain/tests'
-import type { AddAccountParams } from '@/domain/useCases/account/AddAccount'
-
-interface AddAccountParamsWithRole extends AddAccountParams {
-  role?: string
-}
-
-const makeFakeAddAccountParams = (role?: string): AddAccountParamsWithRole => ({
-  name: 'Any Name',
-  email: 'any@email.com',
-  password: 'any_password',
-  role
-})
+import { mockAddAccountParamsWithRole, mockAddSurveyParamsIntegration, mockSurveys } from '@/domain/tests'
 
 const makeAccessToken = async (role?: string): Promise<string> => {
   const accountCollection = await mongoHelper.getCollection('accounts')
-  const document = await accountCollection.insertOne(makeFakeAddAccountParams(role))
+  const document = await accountCollection.insertOne(mockAddAccountParamsWithRole(role))
   const newAccount = await accountCollection.findOne({ _id: document.insertedId })
   const id = newAccount?._id
   const keyPath = process.env.NODE_ENV === 'deployment' ? './jwtRS256.key' : '**/keys/jwt/jwtRS256.key'
