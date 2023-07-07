@@ -49,7 +49,7 @@ const makeFakeAccountValues = (role?: string): AccountValuesWithRole => ({
   role
 })
 
-const createFakeUserAndMakeAccessToken = async (role?: string): Promise<string> => {
+const makeAccessToken = async (role?: string): Promise<string> => {
   const accountCollection = await mongoHelper.getCollection('accounts')
   const document = await accountCollection.insertOne(makeFakeAccountValues(role))
   const newAccount = await accountCollection.findOne({ _id: document.insertedId })
@@ -92,7 +92,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 403 on POST /surveys from an account that doesn\'t have admin role with accessToken', async () => {
-      const accessToken = await createFakeUserAndMakeAccessToken()
+      const accessToken = await makeAccessToken()
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -101,7 +101,7 @@ describe('Survey Routes', () => {
     })
 
     test('Should return 204 on POST /surveys with valid accessToken', async () => {
-      const accessToken = await createFakeUserAndMakeAccessToken('admin')
+      const accessToken = await makeAccessToken('admin')
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
@@ -119,7 +119,7 @@ describe('Survey Routes', () => {
     test('Should return 200 on GET /surveys with valid accessToken', async () => {
       const surveysCollection = await mongoHelper.getCollection('surveys')
       await surveysCollection.insertMany(makeFakeSurveys())
-      const accessToken = await createFakeUserAndMakeAccessToken()
+      const accessToken = await makeAccessToken()
       await request(app)
         .get('/api/surveys')
         .set('x-access-token', accessToken)
