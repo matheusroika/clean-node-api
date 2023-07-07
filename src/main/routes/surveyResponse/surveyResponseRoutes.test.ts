@@ -79,6 +79,15 @@ describe('Survey Response Routes', () => {
         .expect(403)
     })
 
+    test('Should return 403 on PUT /surveys/:surveyId/response without valid surveyId', async () => {
+      const accessToken = await makeAccessToken()
+      await request(app)
+        .put('/api/surveys/invalid_id/response')
+        .set('x-access-token', accessToken)
+        .send({ answer: 'any_answer' })
+        .expect(403)
+    })
+
     test('Should return 200 on PUT /surveys/:surveyId/response with accessToken', async () => {
       const accessToken = await makeAccessToken()
       const surveyId = await makeSurveyId()
