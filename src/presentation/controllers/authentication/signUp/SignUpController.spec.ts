@@ -1,4 +1,5 @@
 import { SignUpController } from './SignUpController'
+import { mockAccount } from '@/domain/tests'
 import { badRequest, forbidden, ok, serverError, EmailInUseError } from './SignUpControllerProtocols'
 import type { AddAccount, Account, AddAccountParams, HttpRequest, Validation, Authentication, AuthParams } from './SignUpControllerProtocols'
 
@@ -12,7 +13,7 @@ type Sut = {
 const makeAddAccount = (): AddAccount => {
   class AddAccountStub implements AddAccount {
     async add (account: AddAccountParams): Promise<Account> {
-      return await new Promise(resolve => { resolve(makeFakeAccount()) })
+      return mockAccount()
     }
   }
   return new AddAccountStub()
@@ -48,13 +49,6 @@ const makeSut = (): Sut => {
     authenticationStub
   }
 }
-
-const makeFakeAccount = (): Account => ({
-  id: 'any_id',
-  name: 'Any Name',
-  email: 'any@email.com',
-  password: 'any_password'
-})
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
