@@ -1,7 +1,7 @@
 import { mongoHelper } from '../helpers/mongoHelper'
 import type { Collection } from 'mongodb'
 import type { SurveyResponse } from '@/domain/models/SurveyResponse'
-import type { SurveyResponseData } from '@/domain/useCases/surveyResponse/SaveSurveyResponse'
+import type { SurveyResponseParams } from '@/domain/useCases/surveyResponse/SaveSurveyResponse'
 import type { SaveSurveyResponseRepository } from '@/data/protocols/db/surveyResponse/SaveSurveyResponseRepository'
 
 export class SurveyResponseMongoRepository implements SaveSurveyResponseRepository {
@@ -9,7 +9,7 @@ export class SurveyResponseMongoRepository implements SaveSurveyResponseReposito
     return await mongoHelper.getCollection('surveyResponses')
   }
 
-  async save (data: SurveyResponseData): Promise<SurveyResponse> {
+  async save (data: SurveyResponseParams): Promise<SurveyResponse> {
     const surveyResponseCollection = await this.getSurveyResponseCollection()
     const { surveyId, accountId, answer, date } = data
     const document = await surveyResponseCollection.findOneAndUpdate({

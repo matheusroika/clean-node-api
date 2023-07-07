@@ -3,11 +3,11 @@ export type SurveyAnswer = {
   answer: string
 }
 
-export type SurveyValues = {
+export type SurveyParams = {
   question: string
   answers: SurveyAnswer[]
 }
 
 export interface AddSurvey {
-  add: (data: SurveyValues) => Promise<void>
+  add: (data: SurveyParams) => Promise<void>
 }

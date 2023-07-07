@@ -1,11 +1,11 @@
-import type { SaveSurveyResponse, SaveSurveyResponseRepository, SurveyResponse, SurveyResponseData } from './DbSaveSurveyResponseProtocols'
+import type { SaveSurveyResponse, SaveSurveyResponseRepository, SurveyResponse, SurveyResponseParams } from './DbSaveSurveyResponseProtocols'
 
 export class DbSaveSurveyResponse implements SaveSurveyResponse {
   constructor (
     private readonly saveSurveyResponseRepository: SaveSurveyResponseRepository
   ) {}
 
-  async save (data: SurveyResponseData): Promise<SurveyResponse> {
+  async save (data: SurveyResponseParams): Promise<SurveyResponse> {
     const surveyResponse = await this.saveSurveyResponseRepository.save(data)
     return surveyResponse
   }

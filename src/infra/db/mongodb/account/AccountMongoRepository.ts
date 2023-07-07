@@ -6,14 +6,14 @@ import type { LoadAccountByEmailRepository } from '@/data/protocols/db/account/L
 import type { LoadAccountByTokenRepository } from '@/data/protocols/db/account/LoadAccountByTokenRepository'
 import type { UpdateAccessTokenRepository } from '@/data/protocols/db/account/UpdateAccessTokenRepository'
 import type { Account } from '@/domain/models/Account'
-import type { AccountValues } from '@/domain/useCases/account/AddAccount'
+import type { AccountParams } from '@/domain/useCases/account/AddAccount'
 
 export class AccountMongoRepository implements AddAccountRepository, LoadAccountByEmailRepository, UpdateAccessTokenRepository, LoadAccountByTokenRepository {
   async getAccountCollection (): Promise<Collection> {
     return await mongoHelper.getCollection('accounts')
   }
 
-  async add (account: AccountValues): Promise<Account> {
+  async add (account: AccountParams): Promise<Account> {
     const accountCollection = await this.getAccountCollection()
     const document = await accountCollection.insertOne(account)
     const newAccount = await accountCollection.findOne({ _id: document.insertedId })

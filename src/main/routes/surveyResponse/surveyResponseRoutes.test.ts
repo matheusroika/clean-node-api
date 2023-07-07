@@ -3,10 +3,10 @@ import jwt from 'jsonwebtoken'
 import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
-import type { SurveyValues } from '@/domain/useCases/survey/AddSurvey'
-import type { AccountValues } from '@/domain/useCases/account/AddAccount'
+import type { SurveyParams } from '@/domain/useCases/survey/AddSurvey'
+import type { AccountParams } from '@/domain/useCases/account/AddAccount'
 
-const makeFakeSurveyValues = (): SurveyValues => ({
+const makeFakeSurveyParams = (): SurveyParams => ({
   question: 'Question',
   answers: [{
     answer: 'Answer 1',
@@ -16,11 +16,11 @@ const makeFakeSurveyValues = (): SurveyValues => ({
   }]
 })
 
-interface AccountValuesWithRole extends AccountValues {
+interface AccountParamsWithRole extends AccountParams {
   role?: string
 }
 
-const makeFakeAccountValues = (role?: string): AccountValuesWithRole => ({
+const makeFakeAccountParams = (role?: string): AccountParamsWithRole => ({
   name: 'Any Name',
   email: 'any@email.com',
   password: 'any_password',
@@ -29,7 +29,7 @@ const makeFakeAccountValues = (role?: string): AccountValuesWithRole => ({
 
 const makeAccessToken = async (role?: string): Promise<string> => {
   const accountCollection = await mongoHelper.getCollection('accounts')
-  const document = await accountCollection.insertOne(makeFakeAccountValues(role))
+  const document = await accountCollection.insertOne(makeFakeAccountParams(role))
   const newAccount = await accountCollection.findOne({ _id: document.insertedId })
   const id = newAccount?._id
   const keyPath = process.env.NODE_ENV === 'deployment' ? './jwtRS256.key' : '**/keys/jwt/jwtRS256.key'
@@ -48,7 +48,7 @@ const makeAccessToken = async (role?: string): Promise<string> => {
 const makeSurveyId = async (): Promise<string> => {
   const surveyCollection = await mongoHelper.getCollection('surveys')
   const document = await surveyCollection.insertOne({
-    ...makeFakeSurveyValues(),
+    ...makeFakeSurveyParams(),
     date: new Date('2023-07-03T05:52:28.514Z')
   })
   return document.insertedId.toString()

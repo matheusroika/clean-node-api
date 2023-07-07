@@ -4,10 +4,10 @@ import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
 import type { Survey } from '@/domain/models/Survey'
-import type { SurveyValues } from '@/domain/useCases/survey/AddSurvey'
-import type { AccountValues } from '@/domain/useCases/account/AddAccount'
+import type { SurveyParams } from '@/domain/useCases/survey/AddSurvey'
+import type { AccountParams } from '@/domain/useCases/account/AddAccount'
 
-const makeFakeSurveyValues = (): SurveyValues => ({
+const makeFakeSurveyParams = (): SurveyParams => ({
   question: 'Question',
   answers: [{
     answer: 'Answer 1',
@@ -38,11 +38,11 @@ const makeFakeSurveys = (): Survey[] => ([
   }
 ])
 
-interface AccountValuesWithRole extends AccountValues {
+interface AccountParamsWithRole extends AccountParams {
   role?: string
 }
 
-const makeFakeAccountValues = (role?: string): AccountValuesWithRole => ({
+const makeFakeAccountParams = (role?: string): AccountParamsWithRole => ({
   name: 'Any Name',
   email: 'any@email.com',
   password: 'any_password',
@@ -51,7 +51,7 @@ const makeFakeAccountValues = (role?: string): AccountValuesWithRole => ({
 
 const makeAccessToken = async (role?: string): Promise<string> => {
   const accountCollection = await mongoHelper.getCollection('accounts')
-  const document = await accountCollection.insertOne(makeFakeAccountValues(role))
+  const document = await accountCollection.insertOne(makeFakeAccountParams(role))
   const newAccount = await accountCollection.findOne({ _id: document.insertedId })
   const id = newAccount?._id
   const keyPath = process.env.NODE_ENV === 'deployment' ? './jwtRS256.key' : '**/keys/jwt/jwtRS256.key'
@@ -87,7 +87,7 @@ describe('Survey Routes', () => {
     test('Should return 403 on POST /surveys without accessToken', async () => {
       await request(app)
         .post('/api/surveys')
-        .send(makeFakeSurveyValues())
+        .send(makeFakeSurveyParams())
         .expect(403)
     })
 
@@ -96,7 +96,7 @@ describe('Survey Routes', () => {
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
-        .send(makeFakeSurveyValues())
+        .send(makeFakeSurveyParams())
         .expect(403)
     })
 
@@ -105,7 +105,7 @@ describe('Survey Routes', () => {
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
-        .send(makeFakeSurveyValues())
+        .send(makeFakeSurveyParams())
         .expect(204)
     })
   })
