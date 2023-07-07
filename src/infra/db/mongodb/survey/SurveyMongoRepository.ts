@@ -29,6 +29,7 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
   }
 
   async loadById (id: string): Promise<Survey | null> {
+    if (!ObjectId.isValid(id)) return null
     const surveyCollection = await this.getSurveyCollection()
     const survey = await surveyCollection.findOne({ _id: new ObjectId(id) })
     if (!survey) return null
