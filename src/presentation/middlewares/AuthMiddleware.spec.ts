@@ -1,16 +1,7 @@
 import { AuthMiddleware } from './AuthMiddleware'
-import { mockAccount } from '@/domain/tests'
+import { mockLoadAccountByToken } from '@/domain/tests'
 import { forbidden, AccessDeniedError, ok, serverError } from './AuthMiddlewareProtocols'
-import type { Account, HttpRequest, LoadAccountByToken } from './AuthMiddlewareProtocols'
-
-const makeLoadAccountByToken = (): LoadAccountByToken => {
-  class LoadAccountByTokenStub implements LoadAccountByToken {
-    async load (accessToken: string, role?: string): Promise<Account | null> {
-      return mockAccount()
-    }
-  }
-  return new LoadAccountByTokenStub()
-}
+import type { HttpRequest, LoadAccountByToken } from './AuthMiddlewareProtocols'
 
 type Sut = {
   sut: AuthMiddleware
@@ -18,7 +9,7 @@ type Sut = {
 }
 
 const makeSut = (role?: string): Sut => {
-  const loadAccountByTokenStub = makeLoadAccountByToken()
+  const loadAccountByTokenStub = mockLoadAccountByToken()
   const sut = new AuthMiddleware(loadAccountByTokenStub, role)
   return {
     sut,

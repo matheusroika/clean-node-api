@@ -1,5 +1,6 @@
 import type { Account } from '@/domain/models/Account'
-import type { AddAccountParams } from '@/domain/useCases/account/AddAccount'
+import type { AddAccount, AddAccountParams } from '@/domain/useCases/account/AddAccount'
+import type { LoadAccountByToken } from '@/domain/useCases/account/LoadAccountByToken'
 
 export const mockAddAccountParams = (): AddAccountParams => ({
   name: 'Any Name',
@@ -22,3 +23,21 @@ export const mockAccount = (): Account => ({
   email: 'any@email.com',
   password: 'hashed_password'
 })
+
+export const mockAddAccount = (): AddAccount => {
+  class AddAccountStub implements AddAccount {
+    async add (account: AddAccountParams): Promise<Account> {
+      return mockAccount()
+    }
+  }
+  return new AddAccountStub()
+}
+
+export const mockLoadAccountByToken = (): LoadAccountByToken => {
+  class LoadAccountByTokenStub implements LoadAccountByToken {
+    async load (accessToken: string, role?: string): Promise<Account | null> {
+      return mockAccount()
+    }
+  }
+  return new LoadAccountByTokenStub()
+}

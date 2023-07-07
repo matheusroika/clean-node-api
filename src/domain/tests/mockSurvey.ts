@@ -1,5 +1,7 @@
 import type { Survey } from '@/domain/models/Survey'
-import type { AddSurveyParams } from '@/domain/useCases/survey/AddSurvey'
+import type { AddSurvey, AddSurveyParams } from '@/domain/useCases/survey/AddSurvey'
+import type { LoadSurveys } from '@/domain/useCases/survey/LoadSurveys'
+import type { LoadSurveyById } from '@/domain/useCases/survey/LoadSurveyById'
 
 export const mockAddSurveyParams = (): AddSurveyParams => ({
   question: 'any_question',
@@ -69,3 +71,28 @@ export const mockSurveys = (): Survey[] => ([
     date: new Date('2023-07-04T05:52:28.514Z')
   }
 ])
+
+export const mockAddSurvey = (): AddSurvey => {
+  class AddSurveyStub implements AddSurvey {
+    async add (data: AddSurveyParams): Promise<void> {}
+  }
+  return new AddSurveyStub()
+}
+
+export const mockLoadSurveys = (): LoadSurveys => {
+  class LoadSurveysStub implements LoadSurveys {
+    async load (): Promise<Survey[]> {
+      return mockSurveys()
+    }
+  }
+  return new LoadSurveysStub()
+}
+
+export const mockLoadSurveyById = (): LoadSurveyById => {
+  class LoadSurveyByIdStub implements LoadSurveyById {
+    async loadById (id: string): Promise<Survey | null> {
+      return mockSurvey()
+    }
+  }
+  return new LoadSurveyByIdStub()
+}

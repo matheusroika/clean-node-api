@@ -1,5 +1,5 @@
 import type { SurveyResponse } from '@/domain/models/SurveyResponse'
-import type { SaveSurveyResponseParams } from '@/domain/useCases/surveyResponse/SaveSurveyResponse'
+import type { SaveSurveyResponse, SaveSurveyResponseParams } from '@/domain/useCases/surveyResponse/SaveSurveyResponse'
 
 export const mockSaveSurveyResponseParams = (): SaveSurveyResponseParams => ({
   surveyId: 'survey_id',
@@ -12,3 +12,12 @@ export const mockSurveyResponse = (): SurveyResponse => ({
   id: 'any_id',
   ...mockSaveSurveyResponseParams()
 })
+
+export const mockSaveSurveyResponse = (): SaveSurveyResponse => {
+  class SaveSurveyResponseStub implements SaveSurveyResponse {
+    async save (data: SaveSurveyResponseParams): Promise<SurveyResponse> {
+      return mockSurveyResponse()
+    }
+  }
+  return new SaveSurveyResponseStub()
+}
