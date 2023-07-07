@@ -56,3 +56,16 @@ export const mockSurvey = (): Survey => ({
   }],
   date: new Date('2023-07-03T05:52:28.514Z')
 })
+
+export const mockSurveys = (): Survey[] => ([
+  mockSurvey(),
+  {
+    id: 'other_id',
+    question: 'other_question',
+    answers: [{
+      image: 'other_image',
+      answer: 'other_answer'
+    }],
+    date: new Date('2023-07-04T05:52:28.514Z')
+  }
+])

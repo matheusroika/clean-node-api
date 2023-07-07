@@ -3,30 +3,8 @@ import jwt from 'jsonwebtoken'
 import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
-import { mockAddSurveyParamsIntegration } from '@/domain/tests'
-import type { Survey } from '@/domain/models/Survey'
+import { mockAddSurveyParamsIntegration, mockSurveys } from '@/domain/tests'
 import type { AddAccountParams } from '@/domain/useCases/account/AddAccount'
-
-const makeFakeSurveys = (): Survey[] => ([
-  {
-    id: 'any_id',
-    question: 'any_question',
-    answers: [{
-      image: 'any_image',
-      answer: 'any_answer'
-    }],
-    date: new Date('2023-07-02T05:52:28.514Z')
-  },
-  {
-    id: 'other_id',
-    question: 'other_question',
-    answers: [{
-      image: 'other_image',
-      answer: 'other_answer'
-    }],
-    date: new Date('2023-07-03T05:52:28.514Z')
-  }
-])
 
 interface AddAccountParamsWithRole extends AddAccountParams {
   role?: string
@@ -108,7 +86,7 @@ describe('Survey Routes', () => {
 
     test('Should return 200 on GET /surveys with valid accessToken', async () => {
       const surveysCollection = await mongoHelper.getCollection('surveys')
-      await surveysCollection.insertMany(makeFakeSurveys())
+      await surveysCollection.insertMany(mockSurveys())
       const accessToken = await makeAccessToken()
       await request(app)
         .get('/api/surveys')
