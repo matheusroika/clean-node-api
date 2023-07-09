@@ -1,3 +1,7 @@
 export * from './accountSchema'
 export * from './loginParamsSchema'
 export * from './errorSchema'
+export * from './surveyAnswerSchema'
+export * from './surveySchema'
+export * from './surveysSchema'
+export * from './apiKeyAuthSchema'
