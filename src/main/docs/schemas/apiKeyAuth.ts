@@ -1,4 +1,4 @@
-export const apiKeyAuthSchema = {
+export const apiKeyAuth = {
   type: 'apiKey',
   in: 'header',
   name: 'x-access-token'

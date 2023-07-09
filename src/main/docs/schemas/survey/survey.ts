@@ -1,4 +1,4 @@
-export const surveySchema = {
+export const survey = {
   type: 'object',
   properties: {
     id: {

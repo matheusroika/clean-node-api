@@ -1,12 +1,12 @@
-export const surveyAnswerSchema = {
+export const loginParams = {
   type: 'object',
   properties: {
-    image: {
+    email: {
       type: 'string'
     },
-    answer: {
+    password: {
       type: 'string'
     }
   },
-  required: ['answer']
+  required: ['email', 'password']
 }

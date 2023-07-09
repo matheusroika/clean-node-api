@@ -1,4 +1,4 @@
-export const errorSchema = {
+export const error = {
   type: 'object',
   properties: {
     error: {
