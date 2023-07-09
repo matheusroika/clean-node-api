@@ -23,10 +23,13 @@ export const loginPath = {
         }
       },
       400: {
-        description: 'Erro: Bad Request'
+        $ref: '#/components/badRequest'
       },
       401: {
-        description: 'Erro: Unauthorized'
+        $ref: '#/components/unauthorized'
+      },
+      500: {
+        $ref: '#/components/serverError'
       }
     }
   }
