@@ -3,6 +3,6 @@ export default {
   info: {
     title: 'Clean Node API',
     description: 'Uma API em Node usando TDD, Clean Architecture, SOLID e Design Patterns, para realizar enquetes',
-    version: '0.17.0'
+    version: '1.0.0'
   }
 }
