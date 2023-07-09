@@ -17,7 +17,7 @@ export const loadSurveysPath = {
         }
       },
       204: {
-        description: 'Não há conteúdo'
+        description: 'Sucesso. Não há conteúdo'
       },
       403: {
         $ref: '#/components/forbidden'
