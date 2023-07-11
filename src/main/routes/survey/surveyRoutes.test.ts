@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
-import { mockAddAccountParamsWithRole, mockAddSurveyParamsIntegration, mockSurveys } from '@/domain/tests'
+import { mockAddAccountParamsWithRole, mockAddSurveyParams, mockSurveys } from '@/domain/tests'
 
 const makeAccessToken = async (role?: string): Promise<string> => {
   const accountCollection = await mongoHelper.getCollection('accounts')
@@ -43,7 +43,7 @@ describe('Survey Routes', () => {
     test('Should return 403 on POST /surveys without accessToken', async () => {
       await request(app)
         .post('/api/surveys')
-        .send(mockAddSurveyParamsIntegration())
+        .send(mockAddSurveyParams(false))
         .expect(403)
     })
 
@@ -52,7 +52,7 @@ describe('Survey Routes', () => {
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
-        .send(mockAddSurveyParamsIntegration())
+        .send(mockAddSurveyParams(false))
         .expect(403)
     })
 
@@ -61,7 +61,7 @@ describe('Survey Routes', () => {
       await request(app)
         .post('/api/surveys')
         .set('x-access-token', accessToken)
-        .send(mockAddSurveyParamsIntegration())
+        .send(mockAddSurveyParams(false))
         .expect(204)
     })
   })

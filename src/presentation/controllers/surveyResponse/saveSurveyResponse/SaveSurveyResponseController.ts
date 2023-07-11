@@ -23,8 +23,7 @@ export class SaveSurveyResponseController implements Controller {
       const surveyResponse = await this.saveSurveyResponse.save({
         surveyId,
         accountId,
-        answer,
-        date: new Date()
+        answer
       })
       return ok(surveyResponse)
     } catch (error) {

@@ -4,13 +4,13 @@ import type { SaveSurveyResponse, SaveSurveyResponseParams } from '@/domain/useC
 export const mockSaveSurveyResponseParams = (): SaveSurveyResponseParams => ({
   surveyId: 'survey_id',
   accountId: 'account_id',
-  answer: 'any_answer',
-  date: new Date('2023-07-03T05:52:28.514Z')
+  answer: 'any_answer'
 })
 
 export const mockSurveyResponse = (): SurveyResponse => ({
   id: 'any_id',
-  ...mockSaveSurveyResponseParams()
+  ...mockSaveSurveyResponseParams(),
+  date: new Date('2023-07-03T05:52:28.514Z')
 })
 
 export const mockSaveSurveyResponse = (): SaveSurveyResponse => {

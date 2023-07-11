@@ -1,11 +1,10 @@
-export type SurveyAnswer = {
-  image?: string
-  answer: string
-}
+import type { SurveyAnswer } from '@/domain/models/Survey'
+
+export type AddSurveyAnswer = Omit<SurveyAnswer, 'count' | 'percent'>
 
 export type AddSurveyParams = {
   question: string
-  answers: SurveyAnswer[]
+  answers: AddSurveyAnswer[]
 }
 
 export interface AddSurvey {

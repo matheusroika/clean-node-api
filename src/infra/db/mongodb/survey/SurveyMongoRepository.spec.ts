@@ -37,16 +37,18 @@ describe('Survey MongoDB Repository', () => {
   describe('AddSurveyRepository', () => {
     test('Should add a survey on Survey.add success', async () => {
       const { sut, surveyCollection } = await makeSut()
-      await sut.add(mockAddSurveyParams())
+      await sut.add(mockAddSurveyParams(false))
       const survey = await surveyCollection.findOne({ question: 'any_question' })
       expect(survey).toBeTruthy()
+      expect(survey?.answers[0].count).toBe(0)
+      expect(survey?.answers[0].percent).toBe(0)
     })
 
     test('Should throw if surveyCollection.insertOne throws', async () => {
       const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
       jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
       jest.spyOn(surveyCollection, 'insertOne').mockImplementation(() => { throw new Error() })
-      const promise = sut.add(mockAddSurveyParams())
+      const promise = sut.add(mockAddSurveyParams(false))
       await expect(promise).rejects.toThrow()
     })
 
@@ -54,7 +56,7 @@ describe('Survey MongoDB Repository', () => {
       const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
       jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
       jest.spyOn(surveyCollection, 'findOne').mockImplementation(() => { throw new Error() })
-      const promise = sut.add(mockAddSurveyParams())
+      const promise = sut.add(mockAddSurveyParams(false))
       await expect(promise).rejects.toThrow()
     })
 
@@ -62,7 +64,7 @@ describe('Survey MongoDB Repository', () => {
       const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
       jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
       jest.spyOn(surveyCollection, 'findOne').mockResolvedValue(null)
-      const promise = sut.add(mockAddSurveyParams())
+      const promise = sut.add(mockAddSurveyParams(false))
       await expect(promise).rejects.toThrow()
     })
   })

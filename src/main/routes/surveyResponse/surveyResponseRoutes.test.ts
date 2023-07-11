@@ -3,7 +3,7 @@ import jwt from 'jsonwebtoken'
 import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
-import { mockAddAccountParamsWithRole, mockSurveyToInsertOneIntegration } from '@/domain/tests'
+import { mockAddAccountParamsWithRole, mockSurveyToInsertOne } from '@/domain/tests'
 
 const makeAccessToken = async (role?: string): Promise<string> => {
   const accountCollection = await mongoHelper.getCollection('accounts')
@@ -25,7 +25,7 @@ const makeAccessToken = async (role?: string): Promise<string> => {
 
 const makeSurveyId = async (): Promise<string> => {
   const surveyCollection = await mongoHelper.getCollection('surveys')
-  const document = await surveyCollection.insertOne(mockSurveyToInsertOneIntegration())
+  const document = await surveyCollection.insertOne(mockSurveyToInsertOne())
   return document.insertedId.toString()
 }
 
@@ -69,7 +69,7 @@ describe('Survey Response Routes', () => {
       await request(app)
         .put(`/api/surveys/${surveyId}/response`)
         .set('x-access-token', accessToken)
-        .send({ answer: 'Answer 1' })
+        .send({ answer: 'any_answer' })
         .expect(200)
     })
   })

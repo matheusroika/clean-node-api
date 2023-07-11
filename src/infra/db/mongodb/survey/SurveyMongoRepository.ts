@@ -14,8 +14,15 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
 
   async add (surveyData: AddSurveyParams): Promise<void> {
     const surveyCollection = await this.getSurveyCollection()
+    const answers = surveyData.answers.map(answer => ({
+      ...answer,
+      count: 0,
+      percent: 0
+    }))
     const document = await surveyCollection.insertOne({
-      ...surveyData,
+      question: surveyData.question,
+      answers,
+      totalResponses: 0,
       date: new Date()
     })
     const survey = await surveyCollection.findOne({ _id: document.insertedId })
