@@ -1,9 +1,9 @@
 {
   "scripts": {
-    "start": "node -r tsconfig-paths/register dist/main/server.js",
+    "start": "node dist/main/server.js",
     "build": "rimraf dist && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
     "build:watch": "rimraf dist && tsc -p tsconfig.build.json && (concurrently \"tsc -p tsconfig.build.json -w\" \"tsc-alias -p tsconfig.build.json -w\")",
-    "debug": "nodemon --watch ./dist --inspect=0.0.0.0:9222 --nolazy dist/main/server.js -r tsconfig-paths/register -P tsconfig.build.json",
+    "debug": "nodemon --watch ./dist --inspect=0.0.0.0:9222 --nolazy dist/main/server.js",
     "up": "docker-compose up -d",
     "up:build": "yarn build && docker-compose up -d --build",
     "down": "docker-compose down",
