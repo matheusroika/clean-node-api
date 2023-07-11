@@ -46,6 +46,7 @@ type SurveyToInsert = Omit<Survey, 'id'>
 
 export const mockSurveyToInsertOne = (): SurveyToInsert => ({
   ...mockAddSurveyParams(true) as SurveyParams,
+  totalResponses: 0,
   date: new Date('2023-07-02T05:12:09.514Z')
 })
 
