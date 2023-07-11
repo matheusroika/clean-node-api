@@ -1,6 +1,7 @@
 import { mongoHelper } from '../helpers/mongoHelper'
 import { SurveyResponseMongoRepository } from './SurveyResponseMongoRepository'
 import { mockAddAccountParams, mockSurveyToInsertOne } from '@/domain/tests'
+import { ObjectId } from 'mongodb'
 import type { Collection, WithId } from 'mongodb'
 import type { Account } from '@/domain/models/Account'
 import type { Survey } from '@/domain/models/Survey'
@@ -37,20 +38,21 @@ const makeAccount = async (): Promise<Account> => {
   return mongoHelper.map(account)
 }
 
-const insertSurveyResponse = async (survey: Survey, account: Account): Promise<string> => {
+const insertSurveyResponse = async (survey: Survey, account: Account): Promise<ObjectId> => {
   const surveyResponseCollection = await mongoHelper.getCollection('surveyResponses')
   const document = await surveyResponseCollection.insertOne({
-    surveyId: survey.id,
-    accountId: account.id,
+    surveyId: new ObjectId(survey.id),
+    accountId: new ObjectId(account.id),
     answer: survey.answers[1].answer,
     date: new Date('2023-07-02T05:52:28.514Z')
   })
-  return document.insertedId.toString()
+  return document.insertedId
 }
 
 type MakeSurveyResponse = {
   surveyResponse: SurveyResponse
-  previousResponseId: string | null
+  surveyId: string
+  previousResponseId: ObjectId | null
 }
 
 const makeSurveyResponse = async (update: boolean): Promise<MakeSurveyResponse> => {
@@ -61,11 +63,11 @@ const makeSurveyResponse = async (update: boolean): Promise<MakeSurveyResponse> 
   const surveyResponse = await sut.save({
     surveyId: survey.id,
     accountId: account.id,
-    answer: survey.answers[0].answer,
-    date: new Date('2023-07-02T05:52:28.514Z')
+    answer: survey.answers[0].answer
   })
   return {
     surveyResponse,
+    surveyId: survey.id,
     previousResponseId
   }
 }
@@ -86,17 +88,15 @@ describe('Survey Response MongoDB Repository', () => {
 
   describe('SaveSurveyResponseRepository', () => {
     test('Should add a survey response if the user hasn\'t responded yet', async () => {
-      const { surveyResponse } = await makeSurveyResponse(false)
+      const { surveyResponse, surveyId } = await makeSurveyResponse(false)
       expect(surveyResponse).toBeTruthy()
-      expect(surveyResponse.id).toBeTruthy()
-      expect(surveyResponse.answer).toBe('any_answer')
+      expect(surveyResponse.surveyId).toEqual(surveyId)
     })
 
     test('Should update the survey response if user has responded already', async () => {
       const { surveyResponse, previousResponseId } = await makeSurveyResponse(true)
       expect(surveyResponse).toBeTruthy()
-      expect(surveyResponse.id.toString()).toBe(previousResponseId)
-      expect(surveyResponse.answer).toBe('any_answer')
+      expect(surveyResponse.id).toEqual(previousResponseId)
     })
 
     test('Should throw if surveyResponseCollection.findOneAndUpdate throws', async () => {
@@ -106,8 +106,7 @@ describe('Survey Response MongoDB Repository', () => {
       const promise = sut.save({
         accountId: 'account_id',
         surveyId: 'survey_id',
-        answer: 'any_answer',
-        date: new Date()
+        answer: 'any_answer'
       })
       await expect(promise).rejects.toThrow()
     })

@@ -1,4 +1,4 @@
-import { MongoClient } from 'mongodb'
+import { MongoClient, ObjectId } from 'mongodb'
 import { setTimeout } from 'timers/promises'
 import type { Collection, WithId, Document } from 'mongodb'
 
@@ -59,5 +59,199 @@ export const mongoHelper = {
 
   mapArray (documents: Array<WithId<Document>>): any[] {
     return documents.map(document => this.map(document))
+  },
+
+  getUpdateAggregation (surveyId: string, oldAnswer: string, answer: string) {
+    return [
+      {
+        $match: {
+          _id: new ObjectId(surveyId)
+        }
+      },
+      {
+        $set: {
+          answers: {
+            $map: {
+              input: '$answers',
+              in: {
+                $cond: {
+                  if: {
+                    $eq: ['$$this.answer', oldAnswer]
+                  },
+                  then: {
+                    $mergeObjects: [
+                      '$$this',
+                      {
+                        count: {
+                          $subtract: ['$$this.count', 1]
+                        }
+                      }
+                    ]
+                  },
+                  else: '$$this'
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $set: {
+          answers: {
+            $map: {
+              input: '$answers',
+              in: {
+                $cond: {
+                  if: {
+                    $eq: ['$$this.answer', oldAnswer]
+                  },
+                  then: {
+                    $mergeObjects: [
+                      '$$this',
+                      {
+                        percent: {
+                          $multiply: [
+                            {
+                              $divide: ['$$this.count', '$totalResponses']
+                            },
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  else: '$$this'
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $set: {
+          answers: {
+            $map: {
+              input: '$answers',
+              in: {
+                $cond: {
+                  if: {
+                    $eq: ['$$this.answer', answer]
+                  },
+                  then: {
+                    $mergeObjects: [
+                      '$$this',
+                      {
+                        count: {
+                          $add: ['$$this.count', 1]
+                        }
+                      }
+                    ]
+                  },
+                  else: '$$this'
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        $set: {
+          answers: {
+            $map: {
+              input: '$answers',
+              in: {
+                $cond: {
+                  if: {
+                    $eq: ['$$this.answer', answer]
+                  },
+                  then: {
+                    $mergeObjects: [
+                      '$$this',
+                      {
+                        percent: {
+                          $multiply: [
+                            {
+                              $divide: ['$$this.count', '$totalResponses']
+                            },
+                            100
+                          ]
+                        }
+                      }
+                    ]
+                  },
+                  else: '$$this'
+                }
+              }
+            }
+          }
+        }
+      },
+      { $project: { _id: 0 } }
+    ]
+  },
+
+  getNewAggregation (surveyId: string, answer: string) {
+    return [
+      {
+        $match: {
+          _id: new ObjectId(surveyId)
+        }
+      },
+      {
+        $set: {
+          answers: {
+            $map: {
+              input: '$answers',
+              in: {
+                $cond: {
+                  if: {
+                    $eq: ['$$this.answer', answer]
+                  },
+                  then: {
+                    $mergeObjects: [
+                      '$$this',
+                      {
+                        count: {
+                          $add: ['$$this.count', 1]
+                        }
+                      }
+                    ]
+                  },
+                  else: '$$this'
+                }
+              }
+            }
+          },
+          totalResponses: {
+            $add: ['$totalResponses', 1]
+          }
+        }
+      },
+      {
+        $set: {
+          answers: {
+            $map: {
+              input: '$answers',
+              in: {
+                $mergeObjects: [
+                  '$$this',
+                  {
+                    percent: {
+                      $multiply: [
+                        {
+                          $divide: ['$$this.count', '$totalResponses']
+                        },
+                        100
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      { $project: { _id: 0 } }
+    ]
   }
 }
