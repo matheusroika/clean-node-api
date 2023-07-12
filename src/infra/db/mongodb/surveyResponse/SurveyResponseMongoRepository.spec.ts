@@ -83,7 +83,7 @@ const makeSurveyResponse = async (update: boolean, existingSurvey?: Survey): Pro
   }
 }
 
-const insertOneSurveyResponse = async (existingSurvey?: Survey): Promise<SurveyResponse> => {
+const makeOneSurveyResponse = async (existingSurvey?: Survey): Promise<SurveyResponse> => {
   const survey = existingSurvey ?? await makeSurvey()
   const account = await makeAccount()
   const surveyResponse = await insertSurveyResponse(survey, account)
@@ -139,7 +139,7 @@ describe('Survey Response MongoDB Repository', () => {
     })
 
     test('Should update answer percent correctly', async () => {
-      const surveyResponse = await insertOneSurveyResponse()
+      const surveyResponse = await makeOneSurveyResponse()
       let survey = await getSurvey(surveyResponse.surveyId)
       let answer = survey.answers.find(item => item.answer === surveyResponse.answer)
       expect(answer?.percent).toBe(100)
