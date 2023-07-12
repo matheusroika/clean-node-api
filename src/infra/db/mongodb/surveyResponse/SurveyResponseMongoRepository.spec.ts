@@ -1,6 +1,6 @@
 import { mongoHelper } from '../helpers/mongoHelper'
 import { SurveyResponseMongoRepository } from './SurveyResponseMongoRepository'
-import { mockAddAccountParams, mockSurveyToInsertOne } from '@/domain/tests'
+import { mockAddAccountParams, mockSaveSurveyResponseParams, mockSurveyToInsertOne } from '@/domain/tests'
 import { ObjectId } from 'mongodb'
 import type { Collection, WithId } from 'mongodb'
 import type { Account } from '@/domain/models/Account'
@@ -10,17 +10,23 @@ import type { SurveyResponse } from '@/domain/models/SurveyResponse'
 type Sut = {
   sut: SurveyResponseMongoRepository
   promiseSurveyResponseCollection: Promise<Collection>
+  promiseSurveyCollection: Promise<Collection>
   surveyResponseCollection: Collection
+  surveyCollection: Collection
 }
 
 const makeSut = async (): Promise<Sut> => {
   const sut = new SurveyResponseMongoRepository()
   const promiseSurveyResponseCollection = mongoHelper.getCollection('surveyResponses')
+  const promiseSurveyCollection = mongoHelper.getCollection('surveys')
   const surveyResponseCollection = await promiseSurveyResponseCollection
+  const surveyCollection = await promiseSurveyCollection
   return {
     sut,
     promiseSurveyResponseCollection,
-    surveyResponseCollection
+    promiseSurveyCollection,
+    surveyResponseCollection,
+    surveyCollection
   }
 }
 
@@ -147,11 +153,15 @@ describe('Survey Response MongoDB Repository', () => {
       const { sut, promiseSurveyResponseCollection, surveyResponseCollection } = await makeSut()
       jest.spyOn(sut, 'getSurveyResponseCollection').mockReturnValue(promiseSurveyResponseCollection)
       jest.spyOn(surveyResponseCollection, 'findOneAndUpdate').mockImplementation(() => { throw new Error() })
-      const promise = sut.save({
-        accountId: 'account_id',
-        surveyId: 'survey_id',
-        answer: 'any_answer'
-      })
+      const promise = sut.save(mockSaveSurveyResponseParams())
+      await expect(promise).rejects.toThrow()
+    })
+
+    test('Should throw if surveyResponseCollection.findOne throws', async () => {
+      const { sut, promiseSurveyResponseCollection, surveyResponseCollection } = await makeSut()
+      jest.spyOn(sut, 'getSurveyResponseCollection').mockReturnValue(promiseSurveyResponseCollection)
+      jest.spyOn(surveyResponseCollection, 'findOne').mockImplementation(() => { throw new Error() })
+      const promise = sut.save(mockSaveSurveyResponseParams())
       await expect(promise).rejects.toThrow()
     })
   })
