@@ -44,14 +44,14 @@ const getSurvey = async (surveyId: string): Promise<Survey> => {
   return mongoHelper.map(survey)
 }
 
-const insertSurveyResponse = async (survey: Survey, account: Account): Promise<ObjectId> => {
+const insertSurveyResponse = async (survey: Survey, account: Account): Promise<SurveyResponse> => {
   const { sut } = await makeSut()
   const surveyResponse = await sut.save({
     surveyId: survey.id,
     accountId: account.id,
     answer: survey.answers[1].answer
   })
-  return new ObjectId(surveyResponse.id)
+  return surveyResponse
 }
 
 type MakeSurveyResponse = {
@@ -60,11 +60,11 @@ type MakeSurveyResponse = {
   previousResponseId: ObjectId | null
 }
 
-const makeSurveyResponse = async (update: boolean): Promise<MakeSurveyResponse> => {
+const makeSurveyResponse = async (update: boolean, existingSurvey?: Survey): Promise<MakeSurveyResponse> => {
   const { sut } = await makeSut()
-  const survey = await makeSurvey()
+  const survey = existingSurvey ?? await makeSurvey()
   const account = await makeAccount()
-  const previousResponseId = update ? await insertSurveyResponse(survey, account) : null
+  const previousSurveyResponse = update ? await insertSurveyResponse(survey, account) : null
   const surveyResponse = await sut.save({
     surveyId: survey.id,
     accountId: account.id,
@@ -73,8 +73,15 @@ const makeSurveyResponse = async (update: boolean): Promise<MakeSurveyResponse> 
   return {
     surveyResponse,
     surveyId: survey.id,
-    previousResponseId
+    previousResponseId: new ObjectId(previousSurveyResponse?.id)
   }
+}
+
+const insertOneSurveyResponse = async (existingSurvey?: Survey): Promise<SurveyResponse> => {
+  const survey = existingSurvey ?? await makeSurvey()
+  const account = await makeAccount()
+  const surveyResponse = await insertSurveyResponse(survey, account)
+  return surveyResponse
 }
 
 describe('Survey Response MongoDB Repository', () => {
@@ -112,6 +119,28 @@ describe('Survey Response MongoDB Repository', () => {
       expect(surveyResponse.answer).toBe(answer?.answer)
       expect(answer?.count).toBe(1)
       expect(answer?.percent).toBe(100)
+    })
+
+    test('Should update answer count correctly', async () => {
+      const { surveyResponse, surveyId } = await makeSurveyResponse(false)
+      let survey = await getSurvey(surveyId)
+      let answer = survey.answers.find(item => item.answer === surveyResponse.answer)
+      expect(answer?.count).toBe(1)
+      await makeSurveyResponse(false, survey)
+      survey = await getSurvey(surveyId)
+      answer = survey.answers.find(item => item.answer === surveyResponse.answer)
+      expect(answer?.count).toBe(2)
+    })
+
+    test('Should update answer percent correctly', async () => {
+      const surveyResponse = await insertOneSurveyResponse()
+      let survey = await getSurvey(surveyResponse.surveyId)
+      let answer = survey.answers.find(item => item.answer === surveyResponse.answer)
+      expect(answer?.percent).toBe(100)
+      await makeSurveyResponse(false, survey)
+      survey = await getSurvey(surveyResponse.surveyId)
+      answer = survey.answers.find(item => item.answer === surveyResponse.answer)
+      expect(answer?.percent).toBe(50)
     })
 
     test('Should throw if surveyResponseCollection.findOneAndUpdate throws', async () => {
