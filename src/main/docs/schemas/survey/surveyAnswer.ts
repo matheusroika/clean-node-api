@@ -6,7 +6,13 @@ export const surveyAnswer = {
     },
     answer: {
       type: 'string'
+    },
+    count: {
+      type: 'number'
+    },
+    percent: {
+      type: 'number'
     }
   },
-  required: ['answer']
+  required: ['answer', 'count', 'percent']
 }

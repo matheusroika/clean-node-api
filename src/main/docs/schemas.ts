@@ -1,4 +1,4 @@
-import { account, error, loginParams, signUpParams, surveyAnswer, survey, surveys, addSurveyParams, saveSurveyResponseParams, surveyResponse } from './schemas/'
+import { account, error, loginParams, signUpParams, surveyAnswer, survey, surveys, addSurveyParams, addSurveyAnswer, saveSurveyResponseParams, surveyResponse } from './schemas/'
 
 export default {
   account,
@@ -9,6 +9,7 @@ export default {
   survey,
   surveys,
   addSurveyParams,
+  addSurveyAnswer,
   saveSurveyResponseParams,
   surveyResponse
 }

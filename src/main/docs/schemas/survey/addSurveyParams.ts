@@ -7,7 +7,7 @@ export const addSurveyParams = {
     answers: {
       type: 'array',
       items: {
-        $ref: '#/schemas/surveyAnswer'
+        $ref: '#/schemas/addSurveyAnswer'
       }
     }
   }

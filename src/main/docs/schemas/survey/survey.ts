@@ -13,6 +13,9 @@ export const survey = {
         $ref: '#/schemas/surveyAnswer'
       }
     },
+    totalResponses: {
+      type: 'number'
+    },
     date: {
       type: 'string'
     }
