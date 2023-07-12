@@ -164,5 +164,13 @@ describe('Survey Response MongoDB Repository', () => {
       const promise = sut.save(mockSaveSurveyResponseParams())
       await expect(promise).rejects.toThrow()
     })
+
+    test('Should throw if surveyCollection.findOneAndUpdate throws', async () => {
+      const { sut, promiseSurveyCollection, surveyCollection } = await makeSut()
+      jest.spyOn(sut, 'getSurveyCollection').mockReturnValue(promiseSurveyCollection)
+      jest.spyOn(surveyCollection, 'findOneAndUpdate').mockImplementation(() => { throw new Error() })
+      const promise = sut.save(mockSaveSurveyResponseParams())
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
