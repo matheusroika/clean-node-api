@@ -1,11 +1,11 @@
-import type { Account } from '@/domain/models/Account'
-
 export type AuthParams = {
   email: string
   password: string
 }
 
-export interface AuthAccount extends Account {
+export interface AuthAccount {
+  name: string
+  email: string
   accessToken: string
 }
 
