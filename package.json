@@ -1,8 +1,8 @@
 {
   "scripts": {
     "start": "node dist/main/server.js",
-    "build": "rimraf dist && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json",
-    "build:watch": "rimraf dist && tsc -p tsconfig.build.json && (concurrently \"tsc -p tsconfig.build.json -w\" \"tsc-alias -p tsconfig.build.json -w\")",
+    "build": "rimraf dist && tsc -p tsconfig.build.json && tsc-alias -p tsconfig.build.json && yarn copy-files",
+    "build:watch": "rimraf dist && tsc -p tsconfig.build.json && yarn copy-files && (concurrently \"tsc -p tsconfig.build.json -w\" \"tsc-alias -p tsconfig.build.json -w\")",
     "debug": "nodemon --watch ./dist --inspect=0.0.0.0:9222 --nolazy dist/main/server.js",
     "up": "docker-compose up -d",
     "up:build": "yarn build && docker-compose up -d --build",
@@ -13,7 +13,8 @@
     "test:integration": "yarn test --watch -c jest.integration.config.js",
     "test:all": "yarn test --watch",
     "test:staged": "yarn test --findRelatedTests",
-    "test:ci": "yarn test --coverage"
+    "test:ci": "yarn test --coverage",
+    "copy-files": "cp -r ./public/. ./dist/static/"
   },
   "name": "clean-node-api",
   "version": "1.0.0",
