@@ -3,9 +3,14 @@ import jwt from 'jsonwebtoken'
 import app from '@/main/config/app'
 import { mongoHelper } from '@/infra/db/mongodb/helpers/mongoHelper'
 import { cryptoHelper } from '@/infra/cryptography/helpers/cryptoHelper'
-import { mockAddAccountParamsWithRole, mockSurveyToInsertOne } from '@/domain/tests'
+import { mockAddAccountParamsWithRole, mockSurveyResponseToInsert, mockSurveyToInsertOne } from '@/domain/tests'
 
-const makeAccessToken = async (role?: string): Promise<string> => {
+type MakeAccessToken = {
+  accessToken: string
+  accountId: string
+}
+
+const makeAccessToken = async (role?: string): Promise<MakeAccessToken> => {
   const accountCollection = await mongoHelper.getCollection('accounts')
   const document = await accountCollection.insertOne(mockAddAccountParamsWithRole(role))
   const newAccount = await accountCollection.findOne({ _id: document.insertedId })
@@ -20,13 +25,21 @@ const makeAccessToken = async (role?: string): Promise<string> => {
       accessToken
     }
   })
-  return accessToken
+  return {
+    accessToken,
+    accountId: document.insertedId.toString()
+  }
 }
 
-const makeSurveyId = async (): Promise<string> => {
+const makeSurveyId = async (accountId?: string): Promise<string> => {
   const surveyCollection = await mongoHelper.getCollection('surveys')
-  const document = await surveyCollection.insertOne(mockSurveyToInsertOne())
-  return document.insertedId.toString()
+  const survey = await surveyCollection.insertOne(mockSurveyToInsertOne())
+  const surveyId = survey.insertedId.toString()
+  if (accountId) {
+    const surveyResponseCollection = await mongoHelper.getCollection('surveyResponses')
+    await surveyResponseCollection.insertOne(mockSurveyResponseToInsert(surveyId, accountId))
+  }
+  return surveyId
 }
 
 describe('Survey Response Routes', () => {
@@ -55,7 +68,7 @@ describe('Survey Response Routes', () => {
     })
 
     test('Should return 403 on PUT /surveys/:surveyId/response without valid surveyId', async () => {
-      const accessToken = await makeAccessToken()
+      const { accessToken } = await makeAccessToken()
       await request(app)
         .put('/api/surveys/invalid_id/response')
         .set('x-access-token', accessToken)
@@ -64,7 +77,7 @@ describe('Survey Response Routes', () => {
     })
 
     test('Should return 200 on PUT /surveys/:surveyId/response with accessToken', async () => {
-      const accessToken = await makeAccessToken()
+      const { accessToken } = await makeAccessToken()
       const surveyId = await makeSurveyId()
       await request(app)
         .put(`/api/surveys/${surveyId}/response`)
@@ -83,11 +96,20 @@ describe('Survey Response Routes', () => {
     })
 
     test('Should return 403 on GET /surveys/:surveyId/response without valid surveyId', async () => {
-      const accessToken = await makeAccessToken()
+      const { accessToken } = await makeAccessToken()
       await request(app)
         .get('/api/surveys/invalid_id/response')
         .set('x-access-token', accessToken)
         .expect(403)
+    })
+
+    test('Should return 200 on GET /surveys/:surveyId/response with accessToken', async () => {
+      const { accessToken, accountId } = await makeAccessToken()
+      const surveyId = await makeSurveyId(accountId)
+      await request(app)
+        .get(`/api/surveys/${surveyId}/response`)
+        .set('x-access-token', accessToken)
+        .expect(200)
     })
   })
 })
