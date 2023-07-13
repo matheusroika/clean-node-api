@@ -4,8 +4,10 @@ import type { Collection, Document } from 'mongodb'
 import type { SurveyResponse } from '@/domain/models/SurveyResponse'
 import type { SaveSurveyResponseParams } from '@/domain/useCases/surveyResponse/SaveSurveyResponse'
 import type { SaveSurveyResponseRepository } from '@/data/protocols/db/surveyResponse/SaveSurveyResponseRepository'
+import type { LoadSurveyResponseRepository } from '@/data/protocols/db/surveyResponse/LoadSurveyResponseRepository'
+import type { LoadSurveyResponseParams } from '@/domain/useCases/surveyResponse/LoadSurveyResponse'
 
-export class SurveyResponseMongoRepository implements SaveSurveyResponseRepository {
+export class SurveyResponseMongoRepository implements SaveSurveyResponseRepository, LoadSurveyResponseRepository {
   async getSurveyResponseCollection (): Promise<Collection> {
     return await mongoHelper.getCollection('surveyResponses')
   }
@@ -37,6 +39,16 @@ export class SurveyResponseMongoRepository implements SaveSurveyResponseReposito
       accountId: new ObjectId(accountId)
     })
     return updatedDocument && mongoHelper.map(updatedDocument)
+  }
+
+  async loadBySurveyId (data: LoadSurveyResponseParams): Promise<SurveyResponse> {
+    const surveyResponseCollection = await this.getSurveyResponseCollection()
+    const { surveyId, accountId } = data
+    const document = await surveyResponseCollection.findOne({
+      surveyId: new ObjectId(surveyId),
+      accountId: new ObjectId(accountId)
+    })
+    return document && mongoHelper.map(document)
   }
 
   private async updateSurvey (isUpdate: boolean, surveyId: string, oldAnswer: string, answer: string): Promise<void> {
