@@ -81,5 +81,13 @@ describe('Survey Response Routes', () => {
         .get(`/api/surveys/${surveyId}/response`)
         .expect(403)
     })
+
+    test('Should return 403 on GET /surveys/:surveyId/response without valid surveyId', async () => {
+      const accessToken = await makeAccessToken()
+      await request(app)
+        .get('/api/surveys/invalid_id/response')
+        .set('x-access-token', accessToken)
+        .expect(403)
+    })
   })
 })
