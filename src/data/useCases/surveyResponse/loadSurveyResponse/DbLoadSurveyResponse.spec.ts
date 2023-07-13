@@ -17,10 +17,17 @@ const makeSut = (): Sut => {
 }
 
 describe('Db Load Survey Response Use Case', () => {
-  test('Should call LoadSurveyResponseRepository with correct id', async () => {
+  test('Should call LoadSurveyResponseRepository.loadBySurveyId with correct id', async () => {
     const { sut, loadSurveyResponseRepositoryStub } = makeSut()
     const loadBySurveyIdSpy = jest.spyOn(loadSurveyResponseRepositoryStub, 'loadBySurveyId')
     await sut.load('survey_id')
     expect(loadBySurveyIdSpy).toHaveBeenCalledWith('survey_id')
+  })
+
+  test('Should throw if LoadSurveyResponseRepository.loadBySurveyId throws', async () => {
+    const { sut, loadSurveyResponseRepositoryStub } = makeSut()
+    jest.spyOn(loadSurveyResponseRepositoryStub, 'loadBySurveyId').mockImplementationOnce(() => { throw new Error() })
+    const promise = sut.load('survey_id')
+    await expect(promise).rejects.toThrow()
   })
 })
