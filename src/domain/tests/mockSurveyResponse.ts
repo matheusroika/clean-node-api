@@ -1,6 +1,6 @@
 import type { SurveyResponse } from '@/domain/models/SurveyResponse'
 import type { SaveSurveyResponse, SaveSurveyResponseParams } from '@/domain/useCases/surveyResponse/SaveSurveyResponse'
-import type { LoadSurveyResponseParams } from '@/domain/useCases/surveyResponse/LoadSurveyResponse'
+import type { LoadSurveyResponse, LoadSurveyResponseParams } from '@/domain/useCases/surveyResponse/LoadSurveyResponse'
 
 export const mockLoadSurveyResponseParams = (): LoadSurveyResponseParams => ({
   surveyId: 'survey_id',
@@ -25,4 +25,13 @@ export const mockSaveSurveyResponse = (): SaveSurveyResponse => {
     }
   }
   return new SaveSurveyResponseStub()
+}
+
+export const mockLoadSurveyResponse = (): LoadSurveyResponse => {
+  class LoadSurveyResponseStub implements LoadSurveyResponse {
+    async load (data: LoadSurveyResponseParams): Promise<SurveyResponse> {
+      return mockSurveyResponse()
+    }
+  }
+  return new LoadSurveyResponseStub()
 }
