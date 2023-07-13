@@ -1,5 +1,5 @@
 import { LoadSurveyResponseController } from './LoadSurveyResponseController'
-// import { badRequest, forbidden, InvalidParamError, MissingParamError, ok, serverError } from './LoadSurveyResponseControllerProtocols'
+import { forbidden, InvalidParamError } from './LoadSurveyResponseControllerProtocols'
 import { mockLoadSurveyResponse, mockLoadSurveyResponseParams } from '@/domain/tests'
 import type { HttpRequest, LoadSurveyResponse } from './LoadSurveyResponseControllerProtocols'
 
@@ -40,14 +40,14 @@ describe('Load Survey Response Controller', () => {
     expect(loadSpy).toHaveBeenCalledWith(mockLoadSurveyResponseParams())
   })
 
-  /* test('Should return 403 if LoadSurveyById returns null', async () => {
-    const { sut, loadSurveyByIdStub } = makeSut()
-    jest.spyOn(loadSurveyByIdStub, 'loadById').mockResolvedValueOnce(null)
+  test('Should return 403 if loadSurveyResponse.load returns null', async () => {
+    const { sut, loadSurveyResponseStub } = makeSut()
+    jest.spyOn(loadSurveyResponseStub, 'load').mockResolvedValueOnce(null)
     const httpResponse = await sut.handle(mockHttpRequest())
     expect(httpResponse).toEqual(forbidden(new InvalidParamError('params.surveyId')))
   })
 
-  test('Should return 403 if an invalid answer is provided', async () => {
+  /* test('Should return 403 if an invalid answer is provided', async () => {
     const { sut } = makeSut()
     const fakeRequest = mockHttpRequest()
     fakeRequest.body.answer = 'invalid_answer'
