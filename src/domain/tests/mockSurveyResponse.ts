@@ -29,7 +29,7 @@ export const mockSaveSurveyResponse = (): SaveSurveyResponse => {
 
 export const mockLoadSurveyResponse = (): LoadSurveyResponse => {
   class LoadSurveyResponseStub implements LoadSurveyResponse {
-    async load (data: LoadSurveyResponseParams): Promise<SurveyResponse> {
+    async load (data: LoadSurveyResponseParams): Promise<SurveyResponse | null> {
       return mockSurveyResponse()
     }
   }

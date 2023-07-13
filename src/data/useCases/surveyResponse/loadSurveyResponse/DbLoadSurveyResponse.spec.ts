@@ -17,9 +17,9 @@ const makeSut = (): Sut => {
 }
 
 describe('Db Load Survey Response Use Case', () => {
-  test('Should call LoadSurveyResponseRepository.loadBySurveyId with correct id', async () => {
+  test('Should call LoadSurveyResponseRepository.load with correct id', async () => {
     const { sut, loadSurveyResponseRepositoryStub } = makeSut()
-    const loadBySurveyIdSpy = jest.spyOn(loadSurveyResponseRepositoryStub, 'loadBySurveyId')
+    const loadBySurveyIdSpy = jest.spyOn(loadSurveyResponseRepositoryStub, 'load')
     await sut.load(mockLoadSurveyResponseParams())
     expect(loadBySurveyIdSpy).toHaveBeenCalledWith(mockLoadSurveyResponseParams())
   })
@@ -30,9 +30,9 @@ describe('Db Load Survey Response Use Case', () => {
     expect(surveyResponse).toEqual(mockSurveyResponse())
   })
 
-  test('Should throw if LoadSurveyResponseRepository.loadBySurveyId throws', async () => {
+  test('Should throw if LoadSurveyResponseRepository.load throws', async () => {
     const { sut, loadSurveyResponseRepositoryStub } = makeSut()
-    jest.spyOn(loadSurveyResponseRepositoryStub, 'loadBySurveyId').mockImplementationOnce(() => { throw new Error() })
+    jest.spyOn(loadSurveyResponseRepositoryStub, 'load').mockImplementationOnce(() => { throw new Error() })
     const promise = sut.load(mockLoadSurveyResponseParams())
     await expect(promise).rejects.toThrow()
   })

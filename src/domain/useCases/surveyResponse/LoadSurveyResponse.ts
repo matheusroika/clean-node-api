@@ -6,5 +6,5 @@ export type LoadSurveyResponseParams = {
 }
 
 export interface LoadSurveyResponse {
-  load: (data: LoadSurveyResponseParams) => Promise<SurveyResponse>
+  load: (data: LoadSurveyResponseParams) => Promise<SurveyResponse | null>
 }

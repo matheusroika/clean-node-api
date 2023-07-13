@@ -178,7 +178,7 @@ describe('Survey Response MongoDB Repository', () => {
     test('Should load survey response correctly', async () => {
       const { surveyResponse } = await makeSurveyResponse()
       const { sut } = await makeSut()
-      const loadSurveyResponse = await sut.loadBySurveyId({
+      const loadSurveyResponse = await sut.load({
         surveyId: surveyResponse.surveyId,
         accountId: surveyResponse.accountId
       })

@@ -41,14 +41,14 @@ export class SurveyResponseMongoRepository implements SaveSurveyResponseReposito
     return updatedDocument && mongoHelper.map(updatedDocument)
   }
 
-  async loadBySurveyId (data: LoadSurveyResponseParams): Promise<SurveyResponse> {
+  async load (data: LoadSurveyResponseParams): Promise<SurveyResponse | null> {
     const surveyResponseCollection = await this.getSurveyResponseCollection()
     const { surveyId, accountId } = data
     const document = await surveyResponseCollection.findOne({
       surveyId: new ObjectId(surveyId),
       accountId: new ObjectId(accountId)
     })
-    return document && mongoHelper.map(document)
+    return document ? mongoHelper.map(document) : null
   }
 
   private async updateSurvey (isUpdate: boolean, surveyId: string, oldAnswer: string, answer: string): Promise<void> {
