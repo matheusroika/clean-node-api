@@ -44,6 +44,7 @@ export class SurveyResponseMongoRepository implements SaveSurveyResponseReposito
   async load (data: LoadSurveyResponseParams): Promise<SurveyResponse | null> {
     const surveyResponseCollection = await this.getSurveyResponseCollection()
     const { surveyId, accountId } = data
+    if (!ObjectId.isValid(surveyId) || !ObjectId.isValid(accountId)) return null
     const document = await surveyResponseCollection.findOne({
       surveyId: new ObjectId(surveyId),
       accountId: new ObjectId(accountId)
