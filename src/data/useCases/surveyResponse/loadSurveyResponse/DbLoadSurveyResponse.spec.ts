@@ -1,7 +1,6 @@
 import { DbLoadSurveyResponse } from './DbLoadSurveyResponse'
-import { mockSurveyResponse } from '@/domain/tests'
-import type { SurveyResponse } from '@/domain/models/SurveyResponse'
-import type { LoadSurveyResponseRepository } from '@/data/protocols/db/surveyResponse/LoadSurveyResponseRepository'
+import { mockSurveyResponse } from './DbLoadSurveyResponseProtocols'
+import type { LoadSurveyResponseRepository, SurveyResponse } from './DbLoadSurveyResponseProtocols'
 
 const makeLoadSurveyResponseRepository = (): LoadSurveyResponseRepository => {
   class LoadSurveyResponseRepositoryStub implements LoadSurveyResponseRepository {
