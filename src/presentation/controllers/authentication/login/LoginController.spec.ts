@@ -1,5 +1,5 @@
 import { LoginController } from './LoginController'
-import { mockAuthentication } from '@/domain/tests'
+import { mockAuthAccount, mockAuthentication } from '@/domain/tests'
 import { mockValidation } from '@/validation/tests'
 import { badRequest, ok, serverError, unauthorized } from './LoginControllerProtocols'
 import type { Authentication, HttpRequest, Validation } from './LoginControllerProtocols'
@@ -53,7 +53,7 @@ describe('Login Controller', () => {
   test('Should return 200 if valid credentials are provided', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockHttpRequest())
-    expect(httpResponse).toEqual(ok({ accessToken: 'any_token' }))
+    expect(httpResponse).toEqual(ok(mockAuthAccount()))
   })
 
   test('Should call Validation with correct values', async () => {
