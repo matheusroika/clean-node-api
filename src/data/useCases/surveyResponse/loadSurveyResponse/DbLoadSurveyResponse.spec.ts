@@ -1,15 +1,6 @@
 import { DbLoadSurveyResponse } from './DbLoadSurveyResponse'
-import { mockSurveyResponse } from './DbLoadSurveyResponseProtocols'
-import type { LoadSurveyResponseRepository, SurveyResponse } from './DbLoadSurveyResponseProtocols'
-
-const makeLoadSurveyResponseRepository = (): LoadSurveyResponseRepository => {
-  class LoadSurveyResponseRepositoryStub implements LoadSurveyResponseRepository {
-    async loadBySurveyId (surveyId: string): Promise<SurveyResponse> {
-      return mockSurveyResponse()
-    }
-  }
-  return new LoadSurveyResponseRepositoryStub()
-}
+import { mockLoadSurveyResponseRepository } from './DbLoadSurveyResponseProtocols'
+import type { LoadSurveyResponseRepository } from './DbLoadSurveyResponseProtocols'
 
 type Sut = {
   sut: DbLoadSurveyResponse
@@ -17,7 +8,7 @@ type Sut = {
 }
 
 const makeSut = (): Sut => {
-  const loadSurveyResponseRepositoryStub = makeLoadSurveyResponseRepository()
+  const loadSurveyResponseRepositoryStub = mockLoadSurveyResponseRepository()
   const sut = new DbLoadSurveyResponse(loadSurveyResponseRepositoryStub)
   return {
     sut,
