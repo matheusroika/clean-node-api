@@ -1,5 +1,5 @@
 import { DbLoadSurveyResponse } from './DbLoadSurveyResponse'
-import { mockLoadSurveyResponseRepository } from './DbLoadSurveyResponseProtocols'
+import { mockLoadSurveyResponseRepository, mockSurveyResponse } from './DbLoadSurveyResponseProtocols'
 import type { LoadSurveyResponseRepository } from './DbLoadSurveyResponseProtocols'
 
 type Sut = {
@@ -22,6 +22,12 @@ describe('Db Load Survey Response Use Case', () => {
     const loadBySurveyIdSpy = jest.spyOn(loadSurveyResponseRepositoryStub, 'loadBySurveyId')
     await sut.load('survey_id')
     expect(loadBySurveyIdSpy).toHaveBeenCalledWith('survey_id')
+  })
+
+  test('Should return a SurveyResponse on success', async () => {
+    const { sut } = makeSut()
+    const surveyResponse = await sut.load('survey_id')
+    expect(surveyResponse).toEqual(mockSurveyResponse())
   })
 
   test('Should throw if LoadSurveyResponseRepository.loadBySurveyId throws', async () => {
