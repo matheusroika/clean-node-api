@@ -1,4 +1,4 @@
-import { loginPath, signUpPath, loadSurveysPath, addSurveyPath, saveSurveyResponsePath } from './paths/'
+import { loginPath, signUpPath, loadSurveysPath, addSurveyPath, saveSurveyResponsePath, loadSurveyResponsePath } from './paths/'
 
 export default {
   '/login': loginPath,
@@ -7,5 +7,8 @@ export default {
     ...loadSurveysPath,
     ...addSurveyPath
   },
-  '/surveys/{surveyId}/response': saveSurveyResponsePath
+  '/surveys/{surveyId}/response': {
+    ...saveSurveyResponsePath,
+    ...loadSurveyResponsePath
+  }
 }
