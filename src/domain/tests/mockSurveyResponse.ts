@@ -1,9 +1,14 @@
 import type { SurveyResponse } from '@/domain/models/SurveyResponse'
 import type { SaveSurveyResponse, SaveSurveyResponseParams } from '@/domain/useCases/surveyResponse/SaveSurveyResponse'
+import type { LoadSurveyResponseParams } from '@/domain/useCases/surveyResponse/LoadSurveyResponse'
+
+export const mockLoadSurveyResponseParams = (): LoadSurveyResponseParams => ({
+  surveyId: 'survey_id',
+  accountId: 'account_id'
+})
 
 export const mockSaveSurveyResponseParams = (): SaveSurveyResponseParams => ({
-  surveyId: 'survey_id',
-  accountId: 'account_id',
+  ...mockLoadSurveyResponseParams(),
   answer: 'any_answer'
 })
 

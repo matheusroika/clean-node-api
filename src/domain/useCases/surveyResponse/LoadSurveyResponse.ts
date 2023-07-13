@@ -1,5 +1,10 @@
 import type { SurveyResponse } from '@/domain/models/SurveyResponse'
 
+export type LoadSurveyResponseParams = {
+  surveyId: string
+  accountId: string
+}
+
 export interface LoadSurveyResponse {
-  load: (surveyId: string) => Promise<SurveyResponse>
+  load: (data: LoadSurveyResponseParams) => Promise<SurveyResponse>
 }

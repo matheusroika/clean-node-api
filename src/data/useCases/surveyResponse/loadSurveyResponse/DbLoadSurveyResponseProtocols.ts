@@ -1,3 +1,4 @@
+/* istanbul ignore file */
 export * from '@/domain/tests'
 export * from '@/data/tests'
 export * from '@/domain/models/SurveyResponse'
