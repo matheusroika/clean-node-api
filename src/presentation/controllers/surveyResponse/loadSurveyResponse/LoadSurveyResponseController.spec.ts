@@ -1,6 +1,6 @@
 import { LoadSurveyResponseController } from './LoadSurveyResponseController'
-import { badRequest, forbidden, InvalidParamError, MissingParamError, serverError } from './LoadSurveyResponseControllerProtocols'
-import { mockLoadSurveyResponse, mockLoadSurveyResponseParams } from '@/domain/tests'
+import { badRequest, forbidden, InvalidParamError, MissingParamError, ok, serverError } from './LoadSurveyResponseControllerProtocols'
+import { mockLoadSurveyResponse, mockLoadSurveyResponseParams, mockSurveyResponse } from '@/domain/tests'
 import type { HttpRequest, LoadSurveyResponse } from './LoadSurveyResponseControllerProtocols'
 
 type Sut = {
@@ -62,16 +62,9 @@ describe('Load Survey Response Controller', () => {
     expect(httpResponse).toEqual(badRequest(new MissingParamError('accountId')))
   })
 
-  /* test('Should return 500 if SaveSurveyResponse throws', async () => {
-    const { sut, saveSurveyResponseStub } = makeSut()
-    jest.spyOn(saveSurveyResponseStub, 'save').mockImplementationOnce(() => { throw new Error() })
-    const httpResponse = await sut.handle(mockHttpRequest())
-    expect(httpResponse).toEqual(serverError(new Error()))
-  })
-
   test('Should return 200 on success', async () => {
     const { sut } = makeSut()
     const httpResponse = await sut.handle(mockHttpRequest())
     expect(httpResponse).toEqual(ok(mockSurveyResponse()))
-  }) */
+  })
 })
