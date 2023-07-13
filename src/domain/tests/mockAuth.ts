@@ -1,4 +1,3 @@
-import { mockAccount } from './mockAccount'
 import type { AuthAccount, AuthParams, Authentication } from '@/domain/useCases/account/Authentication'
 
 export const mockAuthParams = (): AuthParams => ({
@@ -7,7 +6,8 @@ export const mockAuthParams = (): AuthParams => ({
 })
 
 export const mockAuthAccount = (): AuthAccount => ({
-  ...mockAccount(),
+  name: 'Any Name',
+  email: 'any@email.com',
   accessToken: 'any_token'
 })
 
