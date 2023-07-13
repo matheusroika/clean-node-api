@@ -184,5 +184,14 @@ describe('Survey Response MongoDB Repository', () => {
       })
       expect(loadSurveyResponse).toEqual(surveyResponse)
     })
+
+    test('Should return null if can\'t find survey response', async () => {
+      const { sut } = await makeSut()
+      const loadSurveyResponse = await sut.load({
+        surveyId: '6348acd2e1a47ca32e79f46f',
+        accountId: '6348acd2e1a47ca32e79f46f'
+      })
+      expect(loadSurveyResponse).toBeNull()
+    })
   })
 })
