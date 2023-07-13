@@ -30,7 +30,8 @@ export class SurveyResponseMongoRepository implements SaveSurveyResponseReposito
     }, {
       upsert: true
     })
-    const isUpdate = document.lastErrorObject?.updatedExisting
+    const lastErrorObject = document.lastErrorObject as Document
+    const isUpdate = lastErrorObject.updatedExisting
     const oldAnswer = document.value?.answer
     await this.updateSurvey(isUpdate, surveyId, oldAnswer, answer)
 

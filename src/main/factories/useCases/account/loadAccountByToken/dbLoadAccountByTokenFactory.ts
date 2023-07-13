@@ -6,7 +6,7 @@ import type { LoadAccountByToken } from '@/domain/useCases/account/LoadAccountBy
 
 export const makeDbLoadAccountByToken = (): LoadAccountByToken => {
   const isKey = true
-  const keyPath = process.env.NODE_ENV === 'deployment' ? './jwtRS256.key.pub' : '**/keys/jwt/jwtRS256.key.pub'
+  const keyPath = process.env.NODE_ENV === 'deployment' ? /* istanbul ignore next */ './jwtRS256.key.pub' : '**/keys/jwt/jwtRS256.key.pub'
   const secret = cryptoHelper.getPublicKeyObject(cryptoHelper.getKeyString(keyPath))
   const jwtAdapter = new JwtAdapter(secret, isKey)
   const accountMongoRepository = new AccountMongoRepository()
