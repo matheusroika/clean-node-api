@@ -66,7 +66,7 @@ type MakeSurveyResponse = {
   previousResponseId: ObjectId | null
 }
 
-const makeSurveyResponse = async (update: boolean, existingSurvey?: Survey): Promise<MakeSurveyResponse> => {
+const makeSurveyResponse = async (update?: boolean, existingSurvey?: Survey): Promise<MakeSurveyResponse> => {
   const { sut } = await makeSut()
   const survey = existingSurvey ?? await makeSurvey()
   const account = await makeAccount()
@@ -106,7 +106,7 @@ describe('Survey Response MongoDB Repository', () => {
 
   describe('SaveSurveyResponseRepository', () => {
     test('Should add a survey response if the user hasn\'t responded yet', async () => {
-      const { surveyResponse, surveyId } = await makeSurveyResponse(false)
+      const { surveyResponse, surveyId } = await makeSurveyResponse()
       const survey = await getSurvey(surveyId)
       const answer = survey.answers.find(item => item.answer === surveyResponse.answer)
       expect(surveyResponse).toBeTruthy()
@@ -128,7 +128,7 @@ describe('Survey Response MongoDB Repository', () => {
     })
 
     test('Should update answer count correctly', async () => {
-      const { surveyResponse, surveyId } = await makeSurveyResponse(false)
+      const { surveyResponse, surveyId } = await makeSurveyResponse()
       let survey = await getSurvey(surveyId)
       let answer = survey.answers.find(item => item.answer === surveyResponse.answer)
       expect(answer?.count).toBe(1)
@@ -171,6 +171,18 @@ describe('Survey Response MongoDB Repository', () => {
       jest.spyOn(surveyCollection, 'findOneAndUpdate').mockImplementation(() => { throw new Error() })
       const promise = sut.save(mockSaveSurveyResponseParams())
       await expect(promise).rejects.toThrow()
+    })
+  })
+
+  describe('LoadSurveyResponseRepository', () => {
+    test('Should load survey response correctly', async () => {
+      const { surveyResponse } = await makeSurveyResponse()
+      const { sut } = await makeSut()
+      const loadSurveyResponse = await sut.loadBySurveyId({
+        surveyId: surveyResponse.surveyId,
+        accountId: surveyResponse.accountId
+      })
+      expect(loadSurveyResponse).toEqual(surveyResponse)
     })
   })
 })
