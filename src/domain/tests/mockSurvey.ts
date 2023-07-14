@@ -103,7 +103,7 @@ export const mockAddSurvey = (): AddSurvey => {
 
 export const mockLoadSurveys = (): LoadSurveys => {
   class LoadSurveysStub implements LoadSurveys {
-    async load (): Promise<Survey[]> {
+    async load (accountId: string): Promise<Survey[]> {
       return mockSurveys()
     }
   }
