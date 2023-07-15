@@ -18,6 +18,10 @@ export const survey = {
     },
     date: {
       type: 'string'
+    },
+    answered: {
+      type: 'boolean'
     }
-  }
+  },
+  required: ['id', 'question', 'answers', 'totalResponses', 'date']
 }
