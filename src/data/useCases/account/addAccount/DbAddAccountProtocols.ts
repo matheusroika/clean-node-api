@@ -1,6 +1,0 @@
-/* istanbul ignore file */
-export * from '@/domain/models/Account'
-export * from '@/domain/useCases/account/AddAccount'
-export * from '@/data/protocols/cryptography/Hasher'
-export * from '@/data/protocols/db/account/AddAccountRepository'
-export * from '@/data/protocols/db/account/LoadAccountByEmailRepository'
