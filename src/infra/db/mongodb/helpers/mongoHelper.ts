@@ -110,12 +110,12 @@ export const mongoHelper = {
                       '$$this',
                       {
                         percent: {
-                          $multiply: [
-                            {
+                          $round: [{
+                            $multiply: [{
                               $divide: ['$$this.count', '$totalResponses']
                             },
-                            100
-                          ]
+                            100]
+                          }, 2]
                         }
                       }
                     ]
@@ -169,12 +169,12 @@ export const mongoHelper = {
                       '$$this',
                       {
                         percent: {
-                          $multiply: [
-                            {
+                          $round: [{
+                            $multiply: [{
                               $divide: ['$$this.count', '$totalResponses']
                             },
-                            100
-                          ]
+                            100]
+                          }, 2]
                         }
                       }
                     ]
@@ -237,12 +237,12 @@ export const mongoHelper = {
                   '$$this',
                   {
                     percent: {
-                      $multiply: [
-                        {
+                      $round: [{
+                        $multiply: [{
                           $divide: ['$$this.count', '$totalResponses']
                         },
-                        100
-                      ]
+                        100]
+                      }, 2]
                     }
                   }
                 ]
@@ -256,42 +256,92 @@ export const mongoHelper = {
   },
 
   getAnsweredAggregation (accountId: string) {
-    return [
-      {
-        $lookup: {
-          from: 'surveyResponses',
-          localField: '_id',
-          foreignField: 'surveyId',
-          as: 'responses'
-        }
-      },
-      {
-        $project: {
-          _id: 1,
-          question: 1,
-          answers: 1,
-          date: 1,
-          totalResponses: 1,
-          answered: {
-            $gte: [
-              {
-                $size: {
-                  $filter: {
-                    input: '$responses',
-                    cond: {
-                      $eq: [
-                        '$$this.accountId',
-                        new ObjectId(accountId)
-                      ]
-                    }
-                  }
-                }
-              },
-              1
-            ]
+    return [{
+      $lookup: {
+        from: 'surveyResponses',
+        localField: '_id',
+        foreignField: 'surveyId',
+        as: 'responses'
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        question: 1,
+        answers: 1,
+        date: 1,
+        totalResponses: 1,
+        answered: {
+          $filter: {
+            input: '$responses',
+            cond: {
+              $eq: [
+                '$$this.accountId',
+                new ObjectId(accountId)
+              ]
+            }
           }
         }
       }
-    ]
+    },
+    {
+      $unwind: {
+        path: '$answered',
+        preserveNullAndEmptyArrays: true
+      }
+    },
+    {
+      $set: {
+        answers: {
+          $map: {
+            input: '$answers',
+            in: {
+              $cond: {
+                if: {
+                  $eq: [
+                    '$$this.answer',
+                    '$answered.answer'
+                  ]
+                },
+                then: {
+                  $mergeObjects: [
+                    '$$this',
+                    {
+                      isCurrentAccountAnswer: true
+                    }
+                  ]
+                },
+                else: {
+                  $mergeObjects: [
+                    '$$this',
+                    {
+                      isCurrentAccountAnswer: false
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      $project: {
+        _id: 1,
+        question: 1,
+        answers: 1,
+        date: 1,
+        totalResponses: 1,
+        answered: {
+          $cond: {
+            if: {
+              $ifNull: ['$answered', false]
+            },
+            then: true,
+            else: false
+          }
+        }
+      }
+    }]
   }
 }

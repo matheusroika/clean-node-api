@@ -91,11 +91,15 @@ describe('Survey MongoDB Repository', () => {
       })
       const loadedSurveys = await sut.loadSurveys(accountId.toString())
       expect(loadedSurveys.length).toBe(2)
+      expect(loadedSurveys[0].id).toBeTruthy()
       expect(loadedSurveys[1].id).toBeTruthy()
       expect(loadedSurveys[0].question).toBe('any_question')
       expect(loadedSurveys[1].question).toBe('other_question')
       expect(loadedSurveys[0].answered).toBe(true)
       expect(loadedSurveys[1].answered).toBe(false)
+      expect(loadedSurveys[0].answers[0].isCurrentAccountAnswer).toBe(true)
+      expect(loadedSurveys[0].answers[1].isCurrentAccountAnswer).toBe(false)
+      expect(loadedSurveys[1].answers[0].isCurrentAccountAnswer).toBe(false)
     })
 
     test('Should load empty array if there are no surveys', async () => {
