@@ -11,4 +11,5 @@ export type Survey = {
   answers: SurveyAnswer[]
   totalResponses: number
   date: Date
+  answered?: boolean
 }

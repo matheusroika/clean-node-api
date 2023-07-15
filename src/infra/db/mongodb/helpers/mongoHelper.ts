@@ -48,7 +48,7 @@ export const mongoHelper = {
     return process.env.MONGO_LOCAL_URL as string
   },
 
-  map (document: WithId<Document>): any {
+  map (document: WithId<Document> | Document): any {
     const { _id, ...documentWithoutId } = document
     const formattedDocument = {
       id: _id,
@@ -57,7 +57,7 @@ export const mongoHelper = {
     return formattedDocument
   },
 
-  mapArray (documents: Array<WithId<Document>>): any[] {
+  mapArray (documents: Array<WithId<Document>> | Document[]): any[] {
     return documents.map(document => this.map(document))
   },
 
@@ -252,6 +252,46 @@ export const mongoHelper = {
         }
       },
       { $project: { _id: 0 } }
+    ]
+  },
+
+  getAnsweredAggregation (accountId: string) {
+    return [
+      {
+        $lookup: {
+          from: 'surveyResponses',
+          localField: '_id',
+          foreignField: 'surveyId',
+          as: 'responses'
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          question: 1,
+          answers: 1,
+          date: 1,
+          totalResponses: 1,
+          answered: {
+            $gte: [
+              {
+                $size: {
+                  $filter: {
+                    input: '$responses',
+                    cond: {
+                      $eq: [
+                        '$$this.accountId',
+                        new ObjectId(accountId)
+                      ]
+                    }
+                  }
+                }
+              },
+              1
+            ]
+          }
+        }
+      }
     ]
   }
 }

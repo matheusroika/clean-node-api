@@ -29,9 +29,9 @@ export class SurveyMongoRepository implements AddSurveyRepository, LoadSurveysRe
     if (!survey) throw new Error()
   }
 
-  async loadSurveys (): Promise<Survey[]> {
+  async loadSurveys (accountId: string): Promise<Survey[]> {
     const surveyCollection = await this.getSurveyCollection()
-    const surveys = await surveyCollection.find().toArray()
+    const surveys = await surveyCollection.aggregate(mongoHelper.getAnsweredAggregation(accountId)).toArray()
     return mongoHelper.mapArray(surveys)
   }
 
