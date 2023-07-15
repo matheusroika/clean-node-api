@@ -1,22 +1,28 @@
 import { mongoHelper } from '../helpers/mongoHelper'
 import { SurveyMongoRepository } from './SurveyMongoRepository'
 import type { Collection } from 'mongodb'
-import { mockAddSurveyParams, mockSurveyToInsertOne, mockSurveysToInsertMany } from '@/domain/tests'
+import { mockAddAccountParams, mockAddSurveyParams, mockSurveyToInsertOne, mockSurveysToInsertMany } from '@/domain/tests'
 
 type Sut = {
   sut: SurveyMongoRepository
   promiseSurveyCollection: Promise<Collection>
   surveyCollection: Collection
+  surveyResponseCollection: Collection
+  accountCollection: Collection
 }
 
 const makeSut = async (): Promise<Sut> => {
   const sut = new SurveyMongoRepository()
   const promiseSurveyCollection = mongoHelper.getCollection('surveys')
   const surveyCollection = await promiseSurveyCollection
+  const surveyResponseCollection = await mongoHelper.getCollection('surveyResponses')
+  const accountCollection = await mongoHelper.getCollection('accounts')
   return {
     sut,
     promiseSurveyCollection,
-    surveyCollection
+    surveyCollection,
+    surveyResponseCollection,
+    accountCollection
   }
 }
 
@@ -30,8 +36,10 @@ describe('Survey MongoDB Repository', () => {
   })
 
   beforeEach(async () => {
-    const surveyCollection = await mongoHelper.getCollection('surveys')
+    const { surveyCollection, surveyResponseCollection, accountCollection } = await makeSut()
     await surveyCollection.deleteMany({})
+    await surveyResponseCollection.deleteMany({})
+    await accountCollection.deleteMany({})
   })
 
   describe('AddSurveyRepository', () => {
@@ -71,18 +79,28 @@ describe('Survey MongoDB Repository', () => {
 
   describe('LoadSurveysRepository', () => {
     test('Should load all surveys on success', async () => {
-      const { sut, surveyCollection } = await makeSut()
-      await surveyCollection.insertMany(mockSurveysToInsertMany())
-      const surveys = await sut.loadSurveys()
-      expect(surveys.length).toBe(2)
-      expect(surveys[1].id).toBeTruthy()
-      expect(surveys[0].question).toBe('any_question')
-      expect(surveys[1].question).toBe('other_question')
+      const { sut, surveyCollection, accountCollection, surveyResponseCollection } = await makeSut()
+      const surveys = await surveyCollection.insertMany(mockSurveysToInsertMany())
+      const account = await accountCollection.insertOne(mockAddAccountParams())
+      const accountId = account.insertedId
+      await surveyResponseCollection.insertOne({
+        surveyId: surveys.insertedIds[0],
+        accountId,
+        answer: 'any_answer',
+        date: new Date('2023-07-02T05:12:09.514Z')
+      })
+      const loadedSurveys = await sut.loadSurveys(accountId.toString())
+      expect(loadedSurveys.length).toBe(2)
+      expect(loadedSurveys[1].id).toBeTruthy()
+      expect(loadedSurveys[0].question).toBe('any_question')
+      expect(loadedSurveys[1].question).toBe('other_question')
+      expect(loadedSurveys[0].answered).toBe(true)
+      expect(loadedSurveys[1].answered).toBe(false)
     })
 
     test('Should load empty array if there are no surveys', async () => {
       const { sut } = await makeSut()
-      const surveys = await sut.loadSurveys()
+      const surveys = await sut.loadSurveys('6348acd2e1a47ca32e79f46f')
       expect(surveys.length).toBe(0)
       expect(surveys).toEqual([])
     })
