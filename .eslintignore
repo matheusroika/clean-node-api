@@ -7,4 +7,3 @@ coverage
 .env.test
 keys
 ./data
-setupTests.ts
