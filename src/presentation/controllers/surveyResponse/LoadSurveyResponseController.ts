@@ -1,19 +1,23 @@
 import { badRequest, forbidden, ok, serverError } from '@/presentation/helpers/http'
 import { InvalidParamError, MissingParamError } from '@/presentation/errors'
 import type { LoadSurveyResponse } from '@/domain/useCases/surveyResponse/LoadSurveyResponse'
-import type { Controller, HttpRequest, HttpResponse } from '@/presentation/protocols'
+import type { Controller, HttpResponse } from '@/presentation/protocols'
+
+export type LoadSurveyResponseControllerRequest = {
+  accountId?: string
+  surveyId: string
+}
 
 export class LoadSurveyResponseController implements Controller {
   constructor (
     private readonly loadSurveyResponse: LoadSurveyResponse
   ) {}
 
-  async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
+  async handle (request: LoadSurveyResponseControllerRequest): Promise<HttpResponse> {
     try {
-      const { accountId } = httpRequest
+      const { accountId, surveyId } = request
       if (!accountId) return badRequest(new MissingParamError('accountId'))
 
-      const { surveyId } = httpRequest.params
       const surveyResponse = await this.loadSurveyResponse.load({
         accountId,
         surveyId
