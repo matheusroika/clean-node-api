@@ -8,7 +8,7 @@
     "up:build": "yarn build && docker-compose up -d --build",
     "down": "docker-compose down",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
-    "test:verbose": "jest --passWithNoTests",
+    "test:verbose": "jest --passWithNoTests --runInBand --watch",
     "test:unit": "yarn test --watch -c jest.unit.config.js",
     "test:integration": "yarn test --watch -c jest.integration.config.js",
     "test:all": "yarn test --watch",
