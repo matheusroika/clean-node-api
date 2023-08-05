@@ -183,6 +183,24 @@ describe('Survey Response MongoDB Repository', () => {
       expect(loadSurveyResponse).toEqual(surveyResponse)
     })
 
+    test('Should return correctly if survey exists but account hasn\'t responded', async () => {
+      const survey = await makeSurvey()
+      const { sut } = await makeSut()
+      const loadSurveyResponse = await sut.load({
+        surveyId: survey.id,
+        accountId: '6348acd2e1a47ca32e79f46f'
+      })
+      const answers = survey.answers.map(answer => ({ ...answer, isCurrentAccountAnswer: false }))
+      survey.answers = answers
+      expect(loadSurveyResponse).toEqual({
+        id: loadSurveyResponse?.id,
+        accountId: new ObjectId('6348acd2e1a47ca32e79f46f'),
+        answer: null,
+        date: null,
+        survey: { ...survey, answered: false }
+      })
+    })
+
     test('Should return null if can\'t find survey response', async () => {
       const { sut } = await makeSut()
       const loadSurveyResponse = await sut.load({
