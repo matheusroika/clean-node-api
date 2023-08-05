@@ -17,7 +17,7 @@
     "copy-files": "cp -r ./public/. ./dist/static/"
   },
   "name": "clean-node-api",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "main": "index.js",
   "author": "Matheus Roika <matheusroika@hotmail.com>",
   "license": "MIT",
