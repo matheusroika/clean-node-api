@@ -351,8 +351,33 @@ export const mongoHelper = {
         accountId: new ObjectId(accountId),
         surveyId: new ObjectId(surveyId)
       }
-    },
-    {
+    }, {
+      $facet: {
+        matched: [{ $match: {} }]
+      }
+    }, {
+      $project: {
+        result: {
+          $cond: {
+            if: {
+              $eq: [{ $size: '$matched' }, 0]
+            },
+            then: {
+              _id: new ObjectId(),
+              accountId: new ObjectId(accountId),
+              surveyId: new ObjectId(surveyId),
+              answer: null,
+              date: null
+            },
+            else: '$matched'
+          }
+        }
+      }
+    }, {
+      $replaceWith: {
+        $mergeObjects: '$result'
+      }
+    }, {
       $lookup: {
         from: 'surveys',
         localField: 'surveyId',
@@ -363,6 +388,10 @@ export const mongoHelper = {
       $unwind: {
         path: '$survey',
         preserveNullAndEmptyArrays: true
+      }
+    }, {
+      $match: {
+        survey: { $exists: true }
       }
     }, {
       $unset: 'surveyId'
@@ -376,11 +405,7 @@ export const mongoHelper = {
               input: '$survey.answers',
               in: {
                 $cond: {
-                  if: {
-                    $eq: [
-                      '$$this.answer', '$answer'
-                    ]
-                  },
+                  if: { $eq: ['$$this.answer', '$answer'] },
                   then: {
                     $mergeObjects: [
                       '$$this', {
@@ -399,7 +424,15 @@ export const mongoHelper = {
               }
             }
           },
-          answered: true
+          answered: {
+            $cond: {
+              if: {
+                $ifNull: ['$answer', false]
+              },
+              then: true,
+              else: false
+            }
+          }
         }
       }
     }]
