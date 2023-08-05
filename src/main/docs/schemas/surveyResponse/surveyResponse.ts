@@ -4,9 +4,6 @@ export const surveyResponse = {
     id: {
       type: 'string'
     },
-    surveyId: {
-      type: 'string'
-    },
     accountId: {
       type: 'string'
     },
@@ -15,6 +12,9 @@ export const surveyResponse = {
     },
     date: {
       type: 'string'
+    },
+    survey: {
+      $ref: '#/schemas/survey'
     }
   }
 }

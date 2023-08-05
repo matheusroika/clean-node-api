@@ -343,5 +343,65 @@ export const mongoHelper = {
         }
       }
     }]
+  },
+
+  getSurveyResponseAggregation (accountId: string, surveyId: string) {
+    return [{
+      $match: {
+        accountId: new ObjectId(accountId),
+        surveyId: new ObjectId(surveyId)
+      }
+    },
+    {
+      $lookup: {
+        from: 'surveys',
+        localField: 'surveyId',
+        foreignField: '_id',
+        as: 'survey'
+      }
+    }, {
+      $unwind: {
+        path: '$survey',
+        preserveNullAndEmptyArrays: true
+      }
+    }, {
+      $unset: 'surveyId'
+    }, {
+      $set: {
+        survey: {
+          id: '$survey._id',
+          _id: '$$REMOVE',
+          answers: {
+            $map: {
+              input: '$survey.answers',
+              in: {
+                $cond: {
+                  if: {
+                    $eq: [
+                      '$$this.answer', '$answer'
+                    ]
+                  },
+                  then: {
+                    $mergeObjects: [
+                      '$$this', {
+                        isCurrentAccountAnswer: true
+                      }
+                    ]
+                  },
+                  else: {
+                    $mergeObjects: [
+                      '$$this', {
+                        isCurrentAccountAnswer: false
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          answered: true
+        }
+      }
+    }]
   }
 }

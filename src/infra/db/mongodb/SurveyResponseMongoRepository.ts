@@ -35,22 +35,17 @@ export class SurveyResponseMongoRepository implements SaveSurveyResponseReposito
     const oldAnswer = document.value?.answer
     await this.updateSurvey(isUpdate, surveyId, oldAnswer, answer)
 
-    const updatedDocument = await surveyResponseCollection.findOne({
-      surveyId: new ObjectId(surveyId),
-      accountId: new ObjectId(accountId)
-    })
-    return updatedDocument && mongoHelper.map(updatedDocument)
+    const query = surveyResponseCollection.aggregate(mongoHelper.getSurveyResponseAggregation(accountId, surveyId))
+    const updatedDocument = await query.toArray()
+    return updatedDocument?.[0] && mongoHelper.map(updatedDocument[0])
   }
 
   async load (data: LoadSurveyResponseParams): Promise<SurveyResponse | null> {
     const surveyResponseCollection = await this.getSurveyResponseCollection()
     const { surveyId, accountId } = data
     if (!ObjectId.isValid(surveyId) || !ObjectId.isValid(accountId)) return null
-    const document = await surveyResponseCollection.findOne({
-      surveyId: new ObjectId(surveyId),
-      accountId: new ObjectId(accountId)
-    })
-    return document ? mongoHelper.map(document) : null
+    const queryResult = await surveyResponseCollection.aggregate(mongoHelper.getSurveyResponseAggregation(accountId, surveyId)).toArray()
+    return queryResult?.[0] ? mongoHelper.map(queryResult[0]) : null
   }
 
   private async updateSurvey (isUpdate: boolean, surveyId: string, oldAnswer: string, answer: string): Promise<void> {

@@ -1,4 +1,5 @@
 import { ObjectId } from 'mongodb'
+import { mockSurvey } from './mockSurvey'
 import type { SurveyResponse } from '@/domain/models/SurveyResponse'
 import type { SaveSurveyResponse, SaveSurveyResponseParams } from '@/domain/useCases/surveyResponse/SaveSurveyResponse'
 import type { LoadSurveyResponse, LoadSurveyResponseParams } from '@/domain/useCases/surveyResponse/LoadSurveyResponse'
@@ -15,8 +16,10 @@ export const mockSaveSurveyResponseParams = (): SaveSurveyResponseParams => ({
 
 export const mockSurveyResponse = (): SurveyResponse => ({
   id: 'any_id',
-  ...mockSaveSurveyResponseParams(),
-  date: new Date('2023-07-03T05:52:28.514Z')
+  accountId: 'account_id',
+  date: new Date('2023-07-03T05:52:28.514Z'),
+  answer: 'any_answer',
+  survey: mockSurvey()
 })
 
 type SurveyResponseToInsert = {

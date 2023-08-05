@@ -62,7 +62,6 @@ const insertSurveyResponse = async (survey: Survey, account: Account): Promise<S
 
 type MakeSurveyResponse = {
   surveyResponse: SurveyResponse
-  surveyId: string
   previousResponseId: ObjectId | null
 }
 
@@ -72,13 +71,12 @@ const makeSurveyResponse = async (update?: boolean, existingSurvey?: Survey): Pr
   const account = await makeAccount()
   const previousSurveyResponse = update ? await insertSurveyResponse(survey, account) : null
   const surveyResponse = await sut.save({
-    surveyId: survey.id,
-    accountId: account.id,
+    surveyId: survey.id.toString(),
+    accountId: account.id.toString(),
     answer: survey.answers[0].answer
   })
   return {
     surveyResponse,
-    surveyId: survey.id,
     previousResponseId: new ObjectId(previousSurveyResponse?.id)
   }
 }
@@ -106,19 +104,19 @@ describe('Survey Response MongoDB Repository', () => {
 
   describe('SaveSurveyResponseRepository', () => {
     test('Should add a survey response if the user hasn\'t responded yet', async () => {
-      const { surveyResponse, surveyId } = await makeSurveyResponse()
-      const survey = await getSurvey(surveyId)
+      const { surveyResponse } = await makeSurveyResponse()
+      const survey = await getSurvey(surveyResponse.survey.id.toString())
       const answer = survey.answers.find(item => item.answer === surveyResponse.answer)
       expect(surveyResponse).toBeTruthy()
-      expect(surveyResponse.surveyId).toEqual(surveyId)
+      expect(surveyResponse.survey.id).toEqual(survey.id)
       expect(surveyResponse.answer).toBe(answer?.answer)
       expect(answer?.count).toBe(1)
       expect(answer?.percent).toBe(100)
     })
 
     test('Should update the survey response if user has responded already', async () => {
-      const { surveyResponse, surveyId, previousResponseId } = await makeSurveyResponse(true)
-      const survey = await getSurvey(surveyId)
+      const { surveyResponse, previousResponseId } = await makeSurveyResponse(true)
+      const survey = await getSurvey(surveyResponse.survey.id)
       const answer = survey.answers.find(item => item.answer === surveyResponse.answer)
       expect(surveyResponse).toBeTruthy()
       expect(surveyResponse.id).toEqual(previousResponseId)
@@ -128,23 +126,23 @@ describe('Survey Response MongoDB Repository', () => {
     })
 
     test('Should update answer count correctly', async () => {
-      const { surveyResponse, surveyId } = await makeSurveyResponse()
-      let survey = await getSurvey(surveyId)
+      const { surveyResponse } = await makeSurveyResponse()
+      let survey = await getSurvey(surveyResponse.survey.id)
       let answer = survey.answers.find(item => item.answer === surveyResponse.answer)
       expect(answer?.count).toBe(1)
       await makeSurveyResponse(false, survey)
-      survey = await getSurvey(surveyId)
+      survey = await getSurvey(survey.id)
       answer = survey.answers.find(item => item.answer === surveyResponse.answer)
       expect(answer?.count).toBe(2)
     })
 
     test('Should update answer percent correctly', async () => {
       const surveyResponse = await makeOneSurveyResponse()
-      let survey = await getSurvey(surveyResponse.surveyId)
+      let survey = await getSurvey(surveyResponse.survey.id)
       let answer = survey.answers.find(item => item.answer === surveyResponse.answer)
       expect(answer?.percent).toBe(100)
       await makeSurveyResponse(false, survey)
-      survey = await getSurvey(surveyResponse.surveyId)
+      survey = await getSurvey(survey.id)
       answer = survey.answers.find(item => item.answer === surveyResponse.answer)
       expect(answer?.percent).toBe(50)
     })
@@ -179,7 +177,7 @@ describe('Survey Response MongoDB Repository', () => {
       const { surveyResponse } = await makeSurveyResponse()
       const { sut } = await makeSut()
       const loadSurveyResponse = await sut.load({
-        surveyId: surveyResponse.surveyId,
+        surveyId: surveyResponse.survey.id,
         accountId: surveyResponse.accountId
       })
       expect(loadSurveyResponse).toEqual(surveyResponse)
