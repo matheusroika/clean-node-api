@@ -1,0 +1,43 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+      - 'releases/**'
+
+jobs:
+  cicd:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: 'yarn'
+      - name: Setup .env and keys
+        run: |
+          touch .env.test
+          echo "JWT_KEY_PASSPHRASE=${{ secrets.JWT_KEY_PASSPHRASE }}" >> .env.test
+          mkdir -p keys/jwt
+          cat > keys/jwt/jwtRS256.key <<END_OF_MY_KEY
+          ${{ secrets.JWT_RS256_KEY }}
+          END_OF_MY_KEY
+          cat > keys/jwt/jwtRS256.key.pub <<END_OF_MY_KEY
+          ${{ secrets.JWT_RS256_KEY_PUB }}
+          END_OF_MY_KEY
+      - name: Install
+        run: yarn install
+      - name: Test
+        run: |
+          yarn eslint 'src/**'
+          yarn test:ci
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+      - name: Trigger deployment
+        env:
+          DEPLOY_HOOK_URL: ${{ secrets.DEPLOY_HOOK_URL }}
+        run: |
+          curl $DEPLOY_HOOK_URL
