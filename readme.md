@@ -2,6 +2,7 @@
 
 # **Clean Node API**
 
+Essa API faz parte do [treinamento do professor Rodrigo Manguinho (Mango) na Udemy](https://www.udemy.com/course/tdd-com-mango/?referralCode=B53CE5CA2B9AFA5A6FA1).<br/>
 Essa é uma API de estudo para um possível aplicativo de enquetes. Ela conta com rotas de autenticação (registro e login de usuários) e de criação, listagem, resposta e visualização de enquetes.
 
 
